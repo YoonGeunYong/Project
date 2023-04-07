@@ -28,4 +28,12 @@ public class PlayerMovement : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.Space))
 			playerRigidbody.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
 	}
+
+	private void OnTriggerEnter2D(Collider2D other)
+	{
+        if (other.CompareTag("Monster"))
+        {
+            PlayerManager.PM.hpGauge -= 0.33f;
+        }
+	}
 }
