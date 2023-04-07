@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMoveController : MonoBehaviour
 {
-    float moveX, moveY;
+    float moveX;
     [SerializeField] float jumpForce;
     [SerializeField] [Range(3f, 10f)] float moveSpeed = 5f;
 
@@ -22,7 +22,7 @@ public class PlayerMoveController : MonoBehaviour
         moveX = Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime;
         //moveY = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
         transform.position = new Vector2(transform.position.x + moveX,
-            transform.position.y + moveY);
+            transform.position.y);
         if(Input.GetKeyDown(KeyCode.Space))
             playerRigidbody.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
             
