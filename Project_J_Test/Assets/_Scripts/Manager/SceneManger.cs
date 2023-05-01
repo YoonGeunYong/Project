@@ -13,7 +13,7 @@ public class SceneManger : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
 	public void CreateNewGame()
