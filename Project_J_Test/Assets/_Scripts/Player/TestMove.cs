@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class TestMove : MonoBehaviour
 {
-    public float speed = 0.1f;
+    public float speed = 0.2f;
 	public float jumpForce = 5f;
 	Rigidbody2D rB;
 
-    float ho;
-
-    Vector2 playermove;
+    float horizontal;
 
     void Start()
     {
@@ -20,11 +18,12 @@ public class TestMove : MonoBehaviour
     
     void Update()
     {
-        ho = Input.GetAxisRaw("Horizontal");
+        horizontal = Input.GetAxisRaw("Horizontal");
 
-        transform.Translate(new Vector3(ho * speed, 0, 0));
+        transform.Translate(new Vector3(horizontal * speed, 0, 0));
 
 		if (Input.GetKeyDown(KeyCode.Space))
 			rB.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+        
 	}
 }

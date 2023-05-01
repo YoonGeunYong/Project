@@ -33,7 +33,20 @@ public class PlayerMovement : MonoBehaviour
 	{
         if (other.CompareTag("Monster"))
         {
-            PlayerManager.PM.hpGauge -= 0.33f;
+                GameManager.GM.hpGauge -= 0.34f;
         }
+
+        if (other.CompareTag("HelpObject"))
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
+	}
+
+	private void OnTriggerExit2D(Collider2D other)
+	{
+		if (other.CompareTag("HelpObject"))
+		{
+			transform.GetChild(0).gameObject.SetActive(false);
+		}
 	}
 }

@@ -14,14 +14,6 @@ public class PlayerManager : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
-	[SerializeField][Range(0f, 1f)] float _hpGauge = 1f;
-
-	public float hpGauge
-	{
-		get { return _hpGauge; }
-		set { _hpGauge = value; }
-	}
-
 	void Start()
     {
         

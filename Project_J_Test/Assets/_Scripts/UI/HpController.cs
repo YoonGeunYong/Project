@@ -14,6 +14,6 @@ public class HpController : MonoBehaviour
     
     void Update()
     {
-        hpimage.fillAmount = PlayerManager.PM.hpGauge;
+        hpimage.fillAmount = GameManager.GM.hpGauge;
     }
 }

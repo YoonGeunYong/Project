@@ -7,6 +7,8 @@ TagManager:
   - block
   - DefaultPosition
   - Monster
+  - Interaction
+  - HelpObject
   layers:
   - Default
   - TransparentFX
