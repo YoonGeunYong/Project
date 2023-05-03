@@ -10,11 +10,15 @@ public class PlayerMovement : MonoBehaviour
     float input;
 
     Vector3 moveDirX;
+	int defaultLayer;
+	int hideLayer;
 
     Rigidbody2D playerRigidbody;
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
+		defaultLayer = LayerMask.NameToLayer("Player");
+		hideLayer = LayerMask.NameToLayer("HidePlayer");
     }
 
     void Update()
@@ -27,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
 		}
 		if (Input.GetKeyDown(KeyCode.Space))
 			playerRigidbody.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -42,11 +47,20 @@ public class PlayerMovement : MonoBehaviour
         }
 	}
 
+	private void OnTriggerStay2D(Collider2D other)
+	{
+		if (other.CompareTag("Dust"))
+		{
+			gameObject.layer = hideLayer;
+		}
+	}
+
 	private void OnTriggerExit2D(Collider2D other)
 	{
 		if (other.CompareTag("HelpObject"))
-		{
 			transform.GetChild(0).gameObject.SetActive(false);
-		}
+
+		if (other.CompareTag("Dust"))
+			gameObject.layer = defaultLayer;
 	}
 }
