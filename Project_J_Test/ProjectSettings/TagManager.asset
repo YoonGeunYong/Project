@@ -9,6 +9,7 @@ TagManager:
   - Monster
   - Interaction
   - HelpObject
+  - Dust
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - 
   - Player
   - Platform
-  - 
-  - 
+  - HidePlayer
+  - Monster
   - 
   - 
   - 

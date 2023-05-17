@@ -31,7 +31,7 @@ public class MoveMonster : MonoBehaviour
 	void Update()
 	{
 		//search cliff
-		Vector2 cliffV = new Vector2(transform.position.x + moveDir * rayXPos, rb.position.y);
+		Vector2 cliffV = new Vector2(transform.position.x + moveDir * rayXPos, transform.position.y);
 		Debug.DrawRay(cliffV, Vector3.down * cliffRayLen, new Color(0, 0, 1));
 		RaycastHit2D cliffRayHit = Physics2D.Raycast(cliffV, Vector3.down, cliffRayLen, LayerMask.GetMask("Platform"));
 
@@ -87,9 +87,10 @@ public class MoveMonster : MonoBehaviour
 
 			case MonsterStates.Attack:
 				this.GetComponent<Renderer>().material.color = Color.red;
-				
-				if(!isAttack)
+
+				if (!isAttack)
                     StartCoroutine("attackMotion");
+
 
                 break;
 		}
@@ -106,4 +107,9 @@ public class MoveMonster : MonoBehaviour
         isAttack = false;
 		yield break;
     }
+
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		Debug.Log(collision.gameObject.name);
+	}
 }

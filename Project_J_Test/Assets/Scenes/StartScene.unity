@@ -2479,7 +2479,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Title: \uC81C\uBAA9\uBB50\uD558\uC9C0"
+  m_Text: "Title: \uC81C\uBAA9"
 --- !u!222 &1506919887
 CanvasRenderer:
   m_ObjectHideFlags: 0

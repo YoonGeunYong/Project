@@ -48,8 +48,6 @@ public class PlayerController : MonoBehaviour
 			isJumping = true;
 			this.GetComponent<Renderer>().material.color = Color.blue;
 		}
-
-
 	}
 
 	private void OnCollisionStay2D(Collision2D collision)

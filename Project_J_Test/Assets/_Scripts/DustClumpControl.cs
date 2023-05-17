@@ -5,7 +5,7 @@ using UnityEngine;
 public class DustClumpControl : MonoBehaviour
 {
     SpriteRenderer dcsprite;
-    float colorAlpha = 0.8f;
+    [SerializeField] float colorAlpha = 2f; //0.8f
 
     void Start()
     {
