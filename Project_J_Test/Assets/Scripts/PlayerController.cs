@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 
 	private bool isJumping = false;
 
-    void Start()
+	void Start()
 	{
 		rb = GetComponent<Rigidbody2D>();
 	}
