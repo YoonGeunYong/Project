@@ -15,7 +15,13 @@ public class PlayerMovement : MonoBehaviour
 	int hideLayer;
 
     Rigidbody2D playerRigidbody;
-    void Start()
+
+	void Awake()
+	{
+		if (DataController.Instance.PlayerData.playerPosition1 != new Vector3(0, 0, 0))
+			transform.position = DataController.Instance.PlayerData.playerPosition1;
+	}
+	void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
 		defaultLayer = LayerMask.NameToLayer("Player");
