@@ -14,21 +14,20 @@ public class PlayerMovement : MonoBehaviour
 	int defaultLayer;
 	int hideLayer;
 
+	public bool asd;
+
     Rigidbody2D playerRigidbody;
 
-	void Awake()
-	{
-		if (DataController.Instance.PlayerData.playerPosition1 != new Vector3(0, 0, 0))
-			transform.position = DataController.Instance.PlayerData.playerPosition1;
-	}
 	void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
 		defaultLayer = LayerMask.NameToLayer("Player");
 		hideLayer = LayerMask.NameToLayer("HidePlayer");
-    }
+		transform.position = DataController.Instance.nowPlayerData.playerPositionTutorial;
+		GameManager.GM.hpGauge = DataController.Instance.nowPlayerData.playerHP;
+	}
 
-    void Update()
+	void Update()
     {
 
 	}
@@ -36,40 +35,32 @@ public class PlayerMovement : MonoBehaviour
 	void FixedUpdate()
 	{
 		input = Input.GetAxis("Horizontal");
-		//if (Input.GetAxis("Horizontal") != 0)
-		//{
-		//	moveDirX = new Vector3(input, 0, 0).normalized;
-		//	playerRigidbody.AddForce(Vector2.right * moveDirX, ForceMode2D.Impulse);
-		//}
-		
-		moveDirX = new Vector3(input, 0, 0).normalized;
-		//transform.position += moveDirX * speed * Time.deltaTime;
-		playerRigidbody.AddForce(moveDirX, ForceMode2D.Impulse);
-		if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-		{
-			if (playerRigidbody.velocity.x > maxSpeed)
-				playerRigidbody.velocity = new Vector2(maxSpeed, playerRigidbody.velocity.y);
-			else if (playerRigidbody.velocity.x < maxSpeed * (-1))
-				playerRigidbody.velocity = new Vector2(maxSpeed * (-1), playerRigidbody.velocity.y);
-		}
-		else
-			playerRigidbody.velocity = new Vector2(0, playerRigidbody.velocity.y);
+				
+		playerRigidbody.velocity = new Vector2(maxSpeed * input, playerRigidbody.velocity.y);
 
 		if (Input.GetKeyDown(KeyCode.Space))
+		{
 			playerRigidbody.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+		}
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-        if (other.CompareTag("Monster"))
-        {
-                GameManager.GM.hpGauge -= 0.34f;
-        }
+		switch(other.tag)
+		{
+			case "Monster":
+				GameManager.GM.hpGauge -= 0.34f;
+				DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
+				break;
+			case "HelpObject":
+				transform.GetChild(0).gameObject.SetActive(true);
+				break;
+			case "Item":
+				ItemManager.IM.chechItem = true;
+				other.gameObject.SetActive(false);
+				break;
 
-        if (other.CompareTag("HelpObject"))
-        {
-            transform.GetChild(0).gameObject.SetActive(true);
-        }
+		}
 	}
 
 	private void OnTriggerStay2D(Collider2D other)

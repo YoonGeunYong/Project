@@ -8,11 +8,15 @@ public class SceneManger : MonoBehaviour
 	PlayerData playerData;
 	void Awake()
 	{
-		playerData = DataController.Instance.LoadGameData();
 		DontDestroyOnLoad(this.gameObject);
 	}
 
-    void Update()
+	void Start()
+	{
+		playerData = DataController.Instance.nowPlayerData;
+	}
+
+	void Update()
     {
 
     }

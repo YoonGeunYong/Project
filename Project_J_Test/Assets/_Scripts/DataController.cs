@@ -6,49 +6,67 @@ using UnityEngine.Playables;
 using System.IO;
 using System;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class PlayerData
 {
     // 시간, 위치, 아이템
-    public string time;
-    public Vector3 playerPosition1;
-    public int[] item = new int[3];
+    public int time = 1;
+	public float playerHP = 1f;
+    public Vector3 playerPositionTutorial = new Vector3(0f, 0f, 0f);
+    public GameObject[] item = new GameObject[4];
+	public bool[] checkPoint = new bool[5];
 }
 
 public class DataController : MonoBehaviour
 {
 	static GameObject _container;
+	static DataController _instance;
+	
+	public PlayerData _nowPlayerData;
+
+	public string fileName = "ProjectJData";
+	public string filePath;
+	public int nowSlot;
+	public bool[] savefile = new bool[3];
+
+
 	static GameObject Container{
 		get{
 			return _container;
 		}
 	}
 
-	public static DataController _instance;
-
 	public static DataController Instance{
 		get{
-			if (!_instance){
-				_container = new GameObject();
-				_container.name = "DataController";
+			if (!_instance)
+			{
+				if (FindObjectOfType<DataController>())
+				{
+					_container = new GameObject();
+					_container.name = "DataController";
+				}
+				else
+				{
+					_container = GameObject.Find("DataController");
+				}
 				_instance = _container.AddComponent(typeof(DataController)) as DataController;
 				DontDestroyOnLoad(_container);
 			}
 			return _instance;
 		}
 	}
-	public string GameDataFileName = "ProjectJData.json";
-	public PlayerData _playerData;
 
-	public PlayerData PlayerData{
+	public PlayerData nowPlayerData{
 		get{
-			if (_playerData == null){
-				_playerData = LoadGameData();
-				SaveGameData();
-			}
-			return _playerData;
+			//if (nowPlayerData == null){
+			//	nowPlayerData = LoadGameData();
+			//	SaveGameData();
+			//}
+			return _nowPlayerData;
 		}
+		set { _nowPlayerData = value; }
 	}
 
 	void Awake()
@@ -57,33 +75,53 @@ public class DataController : MonoBehaviour
 	}
 
 	void Start()
-    {
-		_playerData = LoadGameData();
-		SaveGameData();
-    }   
+	{
+		filePath = Application.dataPath + "/SaveFile/" + fileName;
+	}   
 
-    public PlayerData LoadGameData(){
-		string filePath = Application.dataPath + "/SaveFile/" + GameDataFileName;
-		if (File.Exists(filePath)){
-			Debug.Log("Load Succes");
-			string FromJsonData = File.ReadAllText(filePath);
-			return JsonUtility.FromJson<PlayerData>(FromJsonData);
+    public void LoadGameData()
+	{
+		//if (File.Exists(filePath))
+		//{
+			//Debug.Log("Load Succes");
+			string FromJsonData = File.ReadAllText(filePath + nowSlot.ToString());
+		if(savefile[nowSlot])
+		{
+			nowPlayerData = JsonUtility.FromJson<PlayerData>(FromJsonData);
 		}
-		else{
-			Debug.Log("Create New File");
-			return new PlayerData();
+		else
+		{
+			nowPlayerData = new PlayerData();
 		}
+			
+		//}
 	}
-	public void SaveGameData(){
-		string ToJsonData = JsonUtility.ToJson(_playerData);
-		string filePath = Application.dataPath + "/SaveFile/" + GameDataFileName;
 
-		File.WriteAllText(filePath, ToJsonData);
+	public void SaveGameData()
+	{
 
-		Debug.Log("Save Succes");
+		string ToJsonData = JsonUtility.ToJson(_nowPlayerData);
+		File.WriteAllText(filePath + nowSlot.ToString(), ToJsonData);
+
+		//Debug.Log("Save Succes");
 	}
 
 	private void OnApplicationQuit(){
 		SaveGameData();
+	}
+
+	public void DataClear()
+	{
+		nowSlot = -1;
+		nowPlayerData = new PlayerData();
+	}
+	
+	public void GoGame()
+	{
+		if (savefile[nowSlot])
+		{
+			SaveGameData();
+		}
+		SceneManager.LoadScene(1);
 	}
 }
