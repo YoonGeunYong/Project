@@ -12,6 +12,11 @@ TagManager:
   - Dust
   - Item
   - Block
+  - Rope
+  - Platform
+  - Pulley
+  - Ladder
+  - Trap
   layers:
   - Default
   - TransparentFX

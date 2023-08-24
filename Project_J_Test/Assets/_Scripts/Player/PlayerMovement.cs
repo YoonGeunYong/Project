@@ -20,12 +20,13 @@ public class PlayerMovement : MonoBehaviour
 
 	void Start()
     {
-        playerRigidbody = GetComponent<Rigidbody2D>();
-		defaultLayer = LayerMask.NameToLayer("Player");
-		hideLayer = LayerMask.NameToLayer("HidePlayer");
+        playerRigidbody = GetComponent<Rigidbody2D>();		
 		transform.position = DataController.Instance.nowPlayerData.playerPositionTutorial;
 		GameManager.GM.hpGauge = DataController.Instance.nowPlayerData.playerHP;
-	}
+
+        defaultLayer = LayerMask.NameToLayer("Player");
+        hideLayer = LayerMask.NameToLayer("HidePlayer");
+    }
 
 	void Update()
     {
@@ -52,12 +53,12 @@ public class PlayerMovement : MonoBehaviour
 				GameManager.GM.hpGauge -= 0.34f;
 				DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
 				break;
-			case "HelpObject":
-				transform.GetChild(0).gameObject.SetActive(true);
+			case "HelpObject":  //닿지 않고 가까이 있을 때, 트리거 오브젝트가 아닐 때는 실행 안됨
+                transform.GetChild(0).gameObject.SetActive(true);	
 				break;
 			case "Item":
 				ItemManager.IM.chechItem = true;
-				other.gameObject.SetActive(false);
+				other.gameObject.SetActive(false);	
 				break;
 
 		}
