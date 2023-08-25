@@ -36,7 +36,6 @@ public class RollingRock : MonoBehaviour
         {
             color.a -= (Time.deltaTime / destroyTime);
             this.GetComponent<SpriteRenderer>().color = color;
-            Debug.Log(color.a);
             time += Time.deltaTime;
 
             if (time >= destroyTime)
