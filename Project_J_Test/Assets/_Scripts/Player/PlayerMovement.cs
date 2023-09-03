@@ -56,10 +56,10 @@ public class PlayerMovement : MonoBehaviour
 			case "HelpObject":  //닿지 않고 가까이 있을 때, 트리거 오브젝트가 아닐 때는 실행 안됨
                 transform.GetChild(0).gameObject.SetActive(true);	
 				break;
-			case "Item":
-				ItemManager.IM.chechItem = true;
-				other.gameObject.SetActive(false);	
-				break;
+			//case "Item":
+			//	ItemManager.IM.chechItem = true;
+			//	other.gameObject.SetActive(false);	
+			//	break;
 
 		}
 	}

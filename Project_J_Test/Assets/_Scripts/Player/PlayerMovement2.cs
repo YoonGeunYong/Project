@@ -53,11 +53,11 @@ public class PlayerMovement2 : MonoBehaviour
         else if (isLaddering == 2 && Input.GetKeyDown(KeyCode.Space))   //탄 상태에서 점프
         {
             isLaddering = 1;
-            rb.gravityScale = 2;
+            rb.gravityScale = 1;
             //rb.bodyType = RigidbodyType2D.Dynamic;
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
-        Debug.Log($"ladder number : {isLaddering}");
+        //Debug.Log($"ladder number : {isLaddering}");
 
 
         //jump
@@ -143,11 +143,11 @@ public class PlayerMovement2 : MonoBehaviour
             transform.GetChild(0).gameObject.SetActive(true);
         }
 
-        if (collision.CompareTag("Item"))
-        {
-            ItemManager.IM.chechItem = true;
-            collision.gameObject.SetActive(false);
-        }
+        //if (collision.CompareTag("Item"))
+        //{
+        //    ItemManager.IM.chechItem = true;
+        //    collision.gameObject.SetActive(false);
+        //}
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -163,7 +163,7 @@ public class PlayerMovement2 : MonoBehaviour
         if (collision.gameObject.CompareTag("Ladder"))
         {
             isLaddering = 0;
-            rb.gravityScale = 2;
+            rb.gravityScale = 1;
         }
 
         if (collision.CompareTag("Dust"))
