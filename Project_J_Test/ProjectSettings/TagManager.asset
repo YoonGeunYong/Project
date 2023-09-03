@@ -10,6 +10,13 @@ TagManager:
   - Interaction
   - HelpObject
   - Dust
+  - Item
+  - Block
+  - Rope
+  - Platform
+  - Pulley
+  - Ladder
+  - Trap
   layers:
   - Default
   - TransparentFX
