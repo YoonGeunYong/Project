@@ -92,56 +92,56 @@ public class PlayerMovement2 : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        if (collision.gameObject.CompareTag("Monster"))
+        if (other.gameObject.CompareTag("Monster"))
         {
             Debug.Log("Damaged!");
             GameManager.GM.hpGauge -= 0.34f;
             DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
         }
 
-        if (collision.gameObject.CompareTag("Pulley"))
+        if (other.gameObject.CompareTag("Pulley"))
         {
-            Debug.Log(collision.gameObject.name);
-            if (transform.position.x < collision.gameObject.transform.position.x)
-                this.transform.SetParent(collision.gameObject.transform.GetChild(0));
+            Debug.Log(other.gameObject.name);
+            if (transform.position.x < other.gameObject.transform.position.x)
+                this.transform.SetParent(other.gameObject.transform.GetChild(0));
             else
-                this.transform.SetParent(collision.gameObject.transform.GetChild(1));
+                this.transform.SetParent(other.gameObject.transform.GetChild(1));
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnCollisionExit2D(Collision2D other)
     {
-        if (collision.gameObject.CompareTag("Pulley"))
+        if (other.gameObject.CompareTag("Pulley"))
         {
             this.transform.SetParent(null);
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Ladder"))
+        if (other.gameObject.CompareTag("Ladder"))
         {
-            Debug.Log(collision.gameObject.name);
-            if (collision.GetComponent<ClimbLadder>().isOpen)
+            Debug.Log(other.gameObject.name);
+            if (other.GetComponent<ClimbLadder>().isOpen)
             {
                 isLaddering = 1;
             }
         }
 
-        if (collision.CompareTag("Rope") && !isRope)
+        if (other.CompareTag("Rope") && !isRope)
         {
-            Rigidbody2D rig = collision.gameObject.GetComponent<Rigidbody2D>();
+            Rigidbody2D rig = other.gameObject.GetComponent<Rigidbody2D>();
             fixJoint.enabled = true;
             fixJoint.connectedBody = rig;
             isRope = true;
         }
 
-        if(collision.CompareTag("HelpObject"))
-        {
-            transform.GetChild(0).gameObject.SetActive(true);
-        }
+        //if(other.CompareTag("HelpObject"))
+        //{
+        //    transform.GetChild(0).gameObject.SetActive(true);
+        //}
 
         //if (collision.CompareTag("Item"))
         //{
@@ -150,28 +150,28 @@ public class PlayerMovement2 : MonoBehaviour
         //}
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if (collision.CompareTag("Dust"))
+        if (other.CompareTag("Dust"))
         {
             gameObject.layer = LayerMask.NameToLayer("HidePlayer");
         }
     }
     
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        if (collision.gameObject.CompareTag("Ladder"))
+        if (other.gameObject.CompareTag("Ladder"))
         {
             isLaddering = 0;
             rb.gravityScale = 1;
         }
 
-        if (collision.CompareTag("Dust"))
+        if (other.CompareTag("Dust"))
             gameObject.layer = LayerMask.NameToLayer("Player");
 
-        if(collision.CompareTag("HelpObject"))
-        {
-            transform.GetChild(0).gameObject.SetActive(false);
-        }
+        //if(other.CompareTag("HelpObject"))
+        //{
+        //    transform.GetChild(0).gameObject.SetActive(false);
+        //}
     }
 }

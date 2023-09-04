@@ -5,27 +5,22 @@ using UnityEngine.UI;
 
 public class ItemManager : MonoBehaviour
 {
-    public int?[] chechItem;
+
+    public bool[] chechItemState = new bool[4];
+    public int[] chechItems = new int[4];
 
     private void Awake()
     {
-        chechItem = DataController.Instance._nowPlayerData.item;
-		for (int i = 0; i < chechItem.Length; i++)
-		{
-            chechItem[i] = DataController.Instance._nowPlayerData.item[i];
-		}
+        for (int i = 0; i < 4; i++)
+        {
+            chechItemState[i] = DataController.Instance._nowPlayerData.itemState[i];
+            chechItems[i] = DataController.Instance._nowPlayerData.items[i];
+        }
     }
 
     void Start()
     {
-		//for (int i = 0; i < DataController.Instance.nowPlayerData.item.Length; i++)
-		//{
-		//	if (DataController.Instance.nowPlayerData.item[i] != null)
-		//		transform.GetChild(i).gameObject.SetActive(true);
-		//}
-
-        
-	}
+    }
 
 
 	void Update()
@@ -50,16 +45,17 @@ public class ItemManager : MonoBehaviour
     
     public void GetItem(int number, Sprite image)
 	{
-        for (int i = 0; i < DataController.Instance.nowPlayerData.item.Length; i++)
+        for (int i = 0; i < chechItemState.Length; i++)
         {
-            if (chechItem[i] == null)
+            if (!chechItemState[i] || chechItems[i] == number)
             {
                 transform.GetChild(i).gameObject.SetActive(true);
                 transform.GetChild(i).GetComponent<Image>().sprite = image;
-                chechItem[i] = number;
-                DataController.Instance.nowPlayerData.item[i] = number;
+                chechItemState[i] = true;
+                chechItems[i] = number;
                 break;
             }
+            
             //else if (DataController.Instance.nowPlayerData.item[3] != null)
             //    chechItem = false;
         }

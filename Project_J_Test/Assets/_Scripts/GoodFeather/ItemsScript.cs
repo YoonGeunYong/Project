@@ -6,16 +6,19 @@ public class ItemsScript : MonoBehaviour
 {
     [SerializeField] int item;
 
-	ItemManager ItemManager;
+	ItemManager itemManager;
 	Sprite sprite;
     void Start()
     {
-		ItemManager = GameObject.Find("ItemBar").GetComponent<ItemManager>();
+		itemManager = GameObject.Find("ItemBar").GetComponent<ItemManager>();
 		sprite = GetComponent<SpriteRenderer>().sprite;
-		for (int i = 0; i < ItemManager.chechItem.Length; i++)
+		for (int i = 0; i < itemManager.chechItemState.Length; i++)
 		{
-			if (ItemManager.chechItem[i] == item)
+			if (itemManager.chechItemState[i] && itemManager.chechItems[i] == item)
+			{
+				itemManager.GetItem(item, sprite);
 				gameObject.SetActive(false);
+			}
 		}
     }
 
@@ -24,7 +27,7 @@ public class ItemsScript : MonoBehaviour
 	{
 		if(other.CompareTag("Player"))
 		{
-			ItemManager.GetItem(item, sprite);
+			itemManager.GetItem(item, sprite);
 			gameObject.SetActive(false);
 		}
 	}

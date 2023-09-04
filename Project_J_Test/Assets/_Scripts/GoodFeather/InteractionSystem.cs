@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InteractionSystem : MonoBehaviour
 {
-    
+    public GameObject helpImage;
     void Start()
     {
         
@@ -15,7 +15,7 @@ public class InteractionSystem : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.F))
         {
-            GameObject.Find("HelpPanel").transform.GetChild(0).gameObject.SetActive(true);
+            helpImage.gameObject.SetActive(true);
         }
     }
 }

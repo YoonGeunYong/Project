@@ -12,8 +12,9 @@ public class PlayerData
     public int time = 1;
 	public float playerHP = 1f;
     public Vector3 playerPositionTutorial = new Vector3(0f, 0f, 0f);
-    public int?[] item = new int?[4];
-	public bool[] checkPoint = new bool[5];
+    public bool[] itemState = new bool[4];
+    public int[] items = new int[4];
+    public bool[] checkPoint = new bool[5];
 }
 
 public class DataController : MonoBehaviour
