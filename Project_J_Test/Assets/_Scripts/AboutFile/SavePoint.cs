@@ -6,6 +6,8 @@ public class SavePoint : MonoBehaviour
 {
 	public bool healCheck;
 
+	ItemManager itemManager;
+
 	void Awake()
 	{
 		for (int i = 0; this.gameObject.name != "SaveTestObject" + $"{i}"; i++)
@@ -14,7 +16,12 @@ public class SavePoint : MonoBehaviour
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D other)
+    private void Start()
+    {
+        itemManager = GameObject.Find("ItemBar").GetComponent<ItemManager>();
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.CompareTag("Player"))
 		{
@@ -27,7 +34,9 @@ public class SavePoint : MonoBehaviour
 					GameManager.GM.hpGauge += 0.34f;
 					healCheck = true;
 					DataController.Instance.nowPlayerData.checkPoint[i] = healCheck;
-					break;
+					DataController.Instance.nowPlayerData.itemState = itemManager.chechItemState;
+                    DataController.Instance.nowPlayerData.items = itemManager.chechItems;
+                    break;
 				}
 			}
 		}

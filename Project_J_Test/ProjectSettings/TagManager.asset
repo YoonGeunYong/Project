@@ -8,9 +8,7 @@ TagManager:
   - DefaultPosition
   - Monster
   - Interaction
-  - HelpObject
   - Dust
-  - Item
   - Block
   - Rope
   - Platform

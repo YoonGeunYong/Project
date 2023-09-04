@@ -34,7 +34,6 @@ public class SelectSlot : MonoBehaviour
     
     void Update()
     {
-        
     }
 
     public void Slot(int num)
@@ -59,24 +58,19 @@ public class SelectSlot : MonoBehaviour
         creat.gameObject.SetActive(true);
 	}
 
-
     public void ClickDeleteButton()
     {
         File.Delete(DataController.Instance.filePath + DataController.Instance.nowSlot.ToString());
+        //슬롯별로 저장된 데이터가 존재하는지 판단
+        for (int i = 0; i < 3; i++)
+        {
+            if (!File.Exists(DataController.Instance.filePath + $"{i}"))
+            {
+                DataController.Instance.savefile[i] = false;
+                DataController.Instance.nowSlot = i;
+                slotText[i].text = "비어있음";
+            }
+        }
+        DataController.Instance.DataClear();
     }
-
-	public void Close()
-	{
-		//슬롯별로 저장된 데이터가 존재하는지 판단
-		for (int i = 0; i < 3; i++)
-		{
-			if (!File.Exists(DataController.Instance.filePath + $"{i}"))
-			{
-				DataController.Instance.savefile[i] = false;
-				DataController.Instance.nowSlot = i;
-				slotText[i].text = "비어있음";
-			}
-		}
-		DataController.Instance.DataClear();
-	}
 }
