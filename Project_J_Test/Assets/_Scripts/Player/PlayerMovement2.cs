@@ -145,7 +145,7 @@ public class PlayerMovement2 : MonoBehaviour
 
         //if (collision.CompareTag("Item"))
         //{
-        //    ItemManager.IM.chechItem = true;
+        //    ItemManager.IM.checkItem = true;
         //    collision.gameObject.SetActive(false);
         //}
     }
