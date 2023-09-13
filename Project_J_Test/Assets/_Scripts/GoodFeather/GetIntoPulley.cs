@@ -58,13 +58,24 @@ public class GetIntoPulley : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if(collision.gameObject.CompareTag("Player"))            
+        {
             isInteract = true;
+
+            if (transform.position.x > collision.gameObject.transform.position.x)
+                collision.transform.SetParent(this.gameObject.transform.GetChild(0));
+            else
+                collision.transform.SetParent(this.gameObject.transform.GetChild(1));
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
+        {
             isInteract = false;
+
+            collision.transform.SetParent(null);
+        }
     }
 }

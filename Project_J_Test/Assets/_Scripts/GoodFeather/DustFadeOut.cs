@@ -22,4 +22,16 @@ public class DustFadeOut : MonoBehaviour
         }
         else Destroy(gameObject);
 	}
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+            collision.gameObject.layer = LayerMask.NameToLayer("HidePlayer");
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+            collision.gameObject.layer = LayerMask.NameToLayer("Player");
+    }
 }
