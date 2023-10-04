@@ -5,6 +5,7 @@ using UnityEngine;
 public class MonsterMovement : MonoBehaviour
 {
     public Transform player;
+    public Transform ground;
     public int moveDir;
     public float speed = 3f;
     public float cliffRayLen = 2.0f;
@@ -14,8 +15,10 @@ public class MonsterMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private bool isNotice;
-
     private bool isAttack;  
+    private bool isBack;
+
+    private float delayTime;
 
     enum MonsterStates { Patrol, Notice, Attack, Delay }    //Delay는 아직 미사용
 
@@ -42,7 +45,7 @@ public class MonsterMovement : MonoBehaviour
 
         if (distance <= attackDis && isNotice)
             currentState = MonsterStates.Attack;
-        else if(distance <= noticeDis && isNotice)
+        else if(distance <= noticeDis && isNotice)//&& !isBack
             currentState = MonsterStates.Notice;
         else
             currentState = MonsterStates.Patrol;
@@ -51,6 +54,21 @@ public class MonsterMovement : MonoBehaviour
         {
             case MonsterStates.Patrol:
                 this.GetComponent<Renderer>().material.color = Color.green;
+
+                //go back to default position
+                /*if(isBack)
+                {
+                    if (this.transform.position.x < ground.position.x)
+                        moveDir = 1;
+                    else
+                        moveDir = -1;
+                    //디폴트 위치로 되돌아간 다음 isBack을 false로 바꿔주는 것까지(디폴트 위치에 도달까지 한 뒤 바꿔야함)
+                    transform.Translate(new Vector3(moveDir * speed * Time.deltaTime, 0, 0));
+
+                    if (this.transform.position.x == ground.position.x)
+                        isBack = false;
+                    break;
+                }*/
 
                 //move forward
                 speed = 3f;
@@ -63,6 +81,17 @@ public class MonsterMovement : MonoBehaviour
 
             case MonsterStates.Notice:
                 this.GetComponent<Renderer>().material.color = Color.yellow;
+
+                //monster is so far from default position
+                if(cliffRayHit.collider == null)
+                {
+                    /*moveDir *= -1;
+                    isBack = true;*/
+                    delayTime += Time.deltaTime;
+                    if(delayTime >= 3)
+                        isNotice = false;
+                    break;
+                }    
 
                 //calc position with player
                 if (this.transform.position.x < player.transform.position.x)

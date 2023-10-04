@@ -101,23 +101,23 @@ public class PlayerMovement2 : MonoBehaviour
             DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
         }
 
-        if (other.gameObject.CompareTag("Pulley"))
-        {
-            Debug.Log(other.gameObject.name);
-            if (transform.position.x < other.gameObject.transform.position.x)
-                this.transform.SetParent(other.gameObject.transform.GetChild(0));
-            else
-                this.transform.SetParent(other.gameObject.transform.GetChild(1));
-        }
+        //if (other.gameObject.CompareTag("Pulley"))
+        //{
+        //    Debug.Log(other.gameObject.name);
+        //    if (transform.position.x < other.gameObject.transform.position.x)
+        //        this.transform.SetParent(other.gameObject.transform.GetChild(0));
+        //    else
+        //        this.transform.SetParent(other.gameObject.transform.GetChild(1));
+        //}
     }
 
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("Pulley"))
-        {
-            this.transform.SetParent(null);
-        }
-    }
+    //private void OnCollisionExit2D(Collision2D other)
+    //{
+        //if (other.gameObject.CompareTag("Pulley"))
+        //{
+        //    this.transform.SetParent(null);
+        //}
+    //}
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -145,18 +145,18 @@ public class PlayerMovement2 : MonoBehaviour
 
         //if (collision.CompareTag("Item"))
         //{
-        //    ItemManager.IM.chechItem = true;
+        //    ItemManager.IM.checkItem = true;
         //    collision.gameObject.SetActive(false);
         //}
     }
 
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.CompareTag("Dust"))
-        {
-            gameObject.layer = LayerMask.NameToLayer("HidePlayer");
-        }
-    }
+    //private void OnTriggerStay2D(Collider2D other)
+    //{
+    //    if (other.CompareTag("Dust"))
+    //    {
+    //        gameObject.layer = LayerMask.NameToLayer("HidePlayer");
+    //    }
+    //}
     
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -166,8 +166,8 @@ public class PlayerMovement2 : MonoBehaviour
             rb.gravityScale = 1;
         }
 
-        if (other.CompareTag("Dust"))
-            gameObject.layer = LayerMask.NameToLayer("Player");
+        //if (other.CompareTag("Dust"))
+        //    gameObject.layer = LayerMask.NameToLayer("Player");
 
         //if(other.CompareTag("HelpObject"))
         //{
