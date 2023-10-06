@@ -11,15 +11,18 @@ public class PlayerMovement2 : MonoBehaviour
 
     Rigidbody2D rb;
     FixedJoint2D fixJoint;
+    Animator anim;
 
     public bool isJumping;
     int isLaddering;    //타지않음 0, 닿았음 1, 탔음 2 
     public bool isRope;
+    public float input;
 
     void Start()
     {
         fixJoint = GetComponent<FixedJoint2D>();
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
 
         transform.position = DataController.Instance.nowPlayerData.playerPositionTutorial;
         GameManager.GM.hpGauge = DataController.Instance.nowPlayerData.playerHP;
@@ -30,7 +33,7 @@ public class PlayerMovement2 : MonoBehaviour
         //move
         if (isLaddering < 2)    //땅에 있을 때
         {
-            float input = Input.GetAxis("Horizontal");
+            input = Input.GetAxis("Horizontal");
             rb.velocity = new Vector2(speed * input, rb.velocity.y);
         }
         else if (isLaddering == 2)  //사다리에 있을 때
@@ -40,6 +43,19 @@ public class PlayerMovement2 : MonoBehaviour
 
             if (Input.GetKey(KeyCode.UpArrow))
                 transform.Translate(new Vector3(0, speed * Time.deltaTime, 0));
+        }
+
+        if (input != 0)
+        {
+            anim.SetBool("Walking", true);
+            if (input < 0)
+                transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
+            else
+                transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
+        }
+        else
+        {
+            anim.SetBool("Walking", false);
         }
 
         //gravity on the ladder
