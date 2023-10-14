@@ -20,9 +20,10 @@ public class MonsterMovement : MonoBehaviour
 
     private float delayTime;
 
-    enum MonsterStates { Patrol, Notice, Attack, Delay }    //Delay는 아직 미사용
+    public enum MonsterStates { Patrol, Notice, Attack, Delay }    //Delay는 아직 미사용
 
-    private static MonsterStates currentState = MonsterStates.Patrol;
+    public  MonsterStates currentState = MonsterStates.Patrol;
+    private float         attackDelay = .5f;
 
     void Start()
     {
@@ -117,12 +118,20 @@ public class MonsterMovement : MonoBehaviour
     IEnumerator attackMotion()  //공격 모션 함수 (괴물에 따라 달라질 수 있음)
     {
         isAttack = true;
-        this.transform.localScale = new Vector3(transform.localScale.x + 2.0f, transform.localScale.y, transform.localScale.z);
-        yield return new WaitForSeconds(0.2f);
-        this.transform.localScale = new Vector3(transform.localScale.x - 2.0f, transform.localScale.y, transform.localScale.z);
-        yield return new WaitForSeconds(0.5f);
+
+        yield return Attack();
+
+        yield return new WaitForSeconds(attackDelay);
         isAttack = false;
-        yield break;
+    }
+
+    protected virtual IEnumerator Attack()
+    {
+        Vector3 _cachedScale = transform.localScale;
+
+        transform.localScale = _cachedScale + Vector3.right * 2.0f;
+        yield return new WaitForSeconds(0.2f);
+        transform.localScale = _cachedScale;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
