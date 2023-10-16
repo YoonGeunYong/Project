@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using BaekRyang;
 using UnityEngine;
 
 public class ComeOutOfCage : MonoBehaviour
@@ -12,13 +13,17 @@ public class ComeOutOfCage : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Platform"))
         {
-            Vector3 spawnPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-            Instantiate(monsterPrefab, transform.position, monsterPrefab.transform.rotation);
+            Vector3 spawnPosition = transform.position;
+            Instantiate(monsterPrefab, spawnPosition, monsterPrefab.transform.rotation);
             //Destroy(this.gameObject);
-            StartCoroutine("DestroyFunc");
+            
+            Destroy(GetComponent<Rigidbody2D>());
+            Destroy(GetComponent<BoxCollider2D>());
+            StartCoroutine(SharedFunction.DestroyFunc(gameObject, destroyTime));
         }
     }
 
+    //SharedFunction.cs 로 대체됨
     IEnumerator DestroyFunc()
     {
         Destroy(GetComponent<Rigidbody2D>());

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using BaekRyang;
 using UnityEngine;
 
 public class RollingRock : MonoBehaviour
@@ -20,13 +21,16 @@ public class RollingRock : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(Vector3.back * rollSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.back * (rollSpeed * Time.deltaTime));
 
         if (time >= lifeTime)
-            StartCoroutine(destroy());
+            StartCoroutine(SharedFunction.DestroyFunc(gameObject, destroyTime));
+
 
         time += Time.deltaTime;
     }
+
+    //SharedFunction.cs 로 대체됨
 
     IEnumerator destroy()
     {

@@ -51,7 +51,7 @@ public class TargetControl_backup : MonoBehaviour
                 defaultPosition.position, moveSpeed / 2 * Time.deltaTime);
         }
         else    //왔다갔다
-            transform.position += Vector3.left * moveSpeed / 2 * Time.deltaTime * enemyTurn;
+            transform.position += Vector3.left * moveSpeed / 2 * (Time.deltaTime * enemyTurn);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -94,15 +94,17 @@ public class TargetControl_backup : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)  //필요없음
     {
-        if (follow && collision.gameObject.tag == "block")
+        if (follow && collision.gameObject.CompareTag("block"))
         {
             collision.enabled = false;
         }
         else
+        {
             for (int i = 0; i < 2; i++)
             {
                 block[i].enabled = true;
             }
+        }
     }
 
     //private void OnCollisionEnter2D(Collision2D collision)
