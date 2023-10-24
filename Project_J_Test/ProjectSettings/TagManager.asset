@@ -15,6 +15,7 @@ TagManager:
   - Pulley
   - Ladder
   - Trap
+  - MoveObj
   layers:
   - Default
   - TransparentFX
