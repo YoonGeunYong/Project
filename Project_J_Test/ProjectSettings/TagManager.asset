@@ -15,6 +15,7 @@ TagManager:
   - Pulley
   - Ladder
   - Trap
+  - pRope
   layers:
   - Default
   - TransparentFX

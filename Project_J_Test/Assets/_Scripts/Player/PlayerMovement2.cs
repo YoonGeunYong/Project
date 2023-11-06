@@ -24,7 +24,7 @@ public class PlayerMovement2 : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        transform.position = DataController.Instance.nowPlayerData.playerPositionTutorial;
+        //transform.position = DataController.Instance.nowPlayerData.playerPositionTutorial;
         GameManager.GM.hpGauge = DataController.Instance.nowPlayerData.playerHP;
     }
 
@@ -83,7 +83,7 @@ public class PlayerMovement2 : MonoBehaviour
             {
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             }
-            else if(isRope && fixJoint.connectedBody != null)
+            else if(isRope && fixJoint.connectedBody is not null)
             {
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             }
@@ -97,7 +97,7 @@ public class PlayerMovement2 : MonoBehaviour
         RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector3.down, rayLength, LayerMask.GetMask("Platform"));
 
         //jump check with eyes
-        if (rayHit.collider != null)
+        if (rayHit.collider is not null)
         {
             isJumping = false;
             isRope = false;
@@ -153,26 +153,8 @@ public class PlayerMovement2 : MonoBehaviour
             fixJoint.connectedBody = rig;
             isRope = true;
         }
-
-        //if(other.CompareTag("HelpObject"))
-        //{
-        //    transform.GetChild(0).gameObject.SetActive(true);
-        //}
-
-        //if (collision.CompareTag("Item"))
-        //{
-        //    ItemManager.IM.checkItem = true;
-        //    collision.gameObject.SetActive(false);
-        //}
     }
 
-    //private void OnTriggerStay2D(Collider2D other)
-    //{
-    //    if (other.CompareTag("Dust"))
-    //    {
-    //        gameObject.layer = LayerMask.NameToLayer("HidePlayer");
-    //    }
-    //}
     
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -182,12 +164,9 @@ public class PlayerMovement2 : MonoBehaviour
             rb.gravityScale = 1;
         }
 
-        //if (other.CompareTag("Dust"))
-        //    gameObject.layer = LayerMask.NameToLayer("Player");
-
-        //if(other.CompareTag("HelpObject"))
-        //{
-        //    transform.GetChild(0).gameObject.SetActive(false);
-        //}
+        if (other.gameObject.CompareTag("pRope"))
+        {
+            isRope = false;
+        }
     }
 }
