@@ -3326,6 +3326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a748e96c855870409e30ef8f68c47df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetObj: {fileID: 1422408837}
 --- !u!114 &1373845176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5154,9 +5155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28e4b1f2027f9e049a72e2109a7861f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 0
-  horizontal: 0
-  vertical: 0
+  mainCamera: {fileID: 1373845171}
 --- !u!251 &2371199048160483449
 PlatformEffector2D:
   m_ObjectHideFlags: 0
