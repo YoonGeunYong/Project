@@ -8,14 +8,16 @@ public class PlayerMovement2 : MonoBehaviour
     public float speed = 10.0f;      //요괴보다 조금 빠르게 설정함(요괴 speed = 3)
     public float jumpForce = 14.0f;
     public float rayLength = 3f;
+    public int itemNum = 0;
 
     Rigidbody2D rb;
     FixedJoint2D fixJoint;
     Animator anim;
+    public ItemManager itemManager;
 
     public bool isRunning;
     public bool isJumping;
-    int isLaddering;    //타지않음 0, 닿았음 1, 탔음 2 
+    private int isLaddering;    //타지않음 0, 닿았음 1, 탔음 2 
     public bool isRope;
     public float inputH;
     public float inputV;
@@ -162,24 +164,7 @@ public class PlayerMovement2 : MonoBehaviour
             GameManager.GM.hpGauge -= 0.34f;
             DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
         }
-
-        //if (other.gameObject.CompareTag("Pulley"))
-        //{
-        //    Debug.Log(other.gameObject.name);
-        //    if (transform.position.x < other.gameObject.transform.position.x)
-        //        this.transform.SetParent(other.gameObject.transform.GetChild(0));
-        //    else
-        //        this.transform.SetParent(other.gameObject.transform.GetChild(1));
-        //}
     }
-
-    //private void OnCollisionExit2D(Collision2D other)
-    //{
-        //if (other.gameObject.CompareTag("Pulley"))
-        //{
-        //    this.transform.SetParent(null);
-        //}
-    //}
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -198,6 +183,16 @@ public class PlayerMovement2 : MonoBehaviour
             fixJoint.enabled = true;
             fixJoint.connectedBody = rig;
             isRope = true;
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (!other.CompareTag("Interaction") || GameManager.GM.itemNum != 1) return;
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            other.GetComponent<DoorControll>().checkItem = true;
+            DataController.Instance.UseItem(1);
         }
     }
 

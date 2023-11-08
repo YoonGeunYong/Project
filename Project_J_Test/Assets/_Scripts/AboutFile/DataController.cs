@@ -115,7 +115,16 @@ public class DataController : MonoBehaviour
         {
             SaveGameData();
         }
-
         SceneManager.LoadScene(1);
+    }
+
+    public void UseItem(int num)
+    {
+        var itemBar = GameObject.Find("ItemBar");
+        nowPlayerData.items[num] = 0;
+        nowPlayerData.itemState[num] = false;
+        itemBar.GetComponent<ItemManager>().chechItems[num] = 0;
+        itemBar.GetComponent<ItemManager>().chechItemState[num] = false;
+        itemBar.transform.GetChild(GameManager.GM.itemInt).gameObject.SetActive(false);
     }
 }

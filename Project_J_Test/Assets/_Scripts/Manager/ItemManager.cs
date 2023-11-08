@@ -8,6 +8,7 @@ public class ItemManager : MonoBehaviour
 
     public bool[] chechItemState = new bool[4];
     public int[] chechItems = new int[4];
+    public Image[] items = new Image[4];
 
     private void Awake()
     {
@@ -20,27 +21,51 @@ public class ItemManager : MonoBehaviour
 
     void Start()
     {
+        for (int i = 0; i < 4; i++)
+        {
+            items[i] = transform.GetChild(i).gameObject.GetComponent<Image>();
+        }
     }
 
 
 	void Update()
     {
-        
-		//if (chechItem)
-		//{
-		//	for (int i = 0; i < DataController.Instance.nowPlayerData.item.Length; i++)
-		//	{
-  //              if (DataController.Instance.nowPlayerData.item[i] == null)
-  //              {
-  //                  transform.GetChild(i).gameObject.SetActive(true);
-  //                  DataController.Instance.nowPlayerData.item[i] = transform.GetChild(i).gameObject;
-  //                  chechItem = false;
-  //                  break;
-  //              }
-  //              else if (DataController.Instance.nowPlayerData.item[3] != null)
-  //                  chechItem = false;
-		//	}
-		//}
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            GameManager.GM.itemNum = chechItems[0];
+            GameManager.GM.itemInt = 0;
+            items[0].color = new Color(1f, 1f, 1f, 1f);
+            items[1].color = new Color(1f, 1f, 1f, 0.5f);
+            items[2].color = new Color(1f, 1f, 1f, 0.5f);
+            items[3].color = new Color(1f, 1f, 1f, 0.5f);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            GameManager.GM.itemNum = chechItems[1];
+            GameManager.GM.itemInt = 1;
+            items[0].color = new Color(1f, 1f, 1f, 0.5f);
+            items[1].color = new Color(1f, 1f, 1f, 1f);
+            items[2].color = new Color(1f, 1f, 1f, 0.5f);
+            items[3].color = new Color(1f, 1f, 1f, 0.5f);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            GameManager.GM.itemNum = chechItems[2];
+            GameManager.GM.itemInt = 2;
+            items[0].color = new Color(1f, 1f, 1f, 0.5f);
+            items[1].color = new Color(1f, 1f, 1f, 0.5f);
+            items[2].color = new Color(1f, 1f, 1f, 1f);
+            items[3].color = new Color(1f, 1f, 1f, 0.5f);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            GameManager.GM.itemNum = chechItems[3];
+            GameManager.GM.itemInt = 3;
+            items[0].color = new Color(1f, 1f, 1f, 0.5f);
+            items[1].color = new Color(1f, 1f, 1f, 0.5f);
+            items[2].color = new Color(1f, 1f, 1f, 0.5f);
+            items[3].color = new Color(1f, 1f, 1f, 1f);
+        }
     }
     
     public void GetItem(int number, Sprite image)
