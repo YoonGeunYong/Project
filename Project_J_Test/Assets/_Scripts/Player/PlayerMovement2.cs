@@ -13,10 +13,12 @@ public class PlayerMovement2 : MonoBehaviour
     FixedJoint2D fixJoint;
     Animator anim;
 
+    public bool isRunning;
     public bool isJumping;
     int isLaddering;    //타지않음 0, 닿았음 1, 탔음 2 
     public bool isRope;
-    public float input;
+    public float inputH;
+    public float inputV;
 
     void Start()
     {
@@ -30,60 +32,102 @@ public class PlayerMovement2 : MonoBehaviour
 
     void Update()
     {
-        //move
-        if (isLaddering < 2)    //땅에 있을 때
+        switch (isLaddering)
         {
-            input = Input.GetAxis("Horizontal");
-            rb.velocity = new Vector2(speed * input, rb.velocity.y);
-        }
-        else if (isLaddering == 2)  //사다리에 있을 때
-        {
-            if (Input.GetKey(KeyCode.DownArrow))
-                transform.Translate(new Vector3(0, speed * Time.deltaTime * -1, 0));
+            //move
+            //땅에 있을 때
+            case < 2:
+            {
+                inputH = Input.GetAxis("Horizontal");
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    rb.velocity = new Vector2(speed * inputH * 1.75f, rb.velocity.y);
+                    isRunning = true;
+                }
+                else
+                {
+                    rb.velocity = new Vector2(speed * inputH, rb.velocity.y);
+                    isRunning = false;
+                }
 
-            if (Input.GetKey(KeyCode.UpArrow))
-                transform.Translate(new Vector3(0, speed * Time.deltaTime, 0));
+                break;
+            }
+            //사다리에 있을 때
+            case 2:
+            {
+                inputV = Input.GetAxis("Vertical");
+                if (inputV != 0)
+                {
+                    anim.speed = 1f;
+                    transform.Translate(new Vector3(0, speed * Time.deltaTime * inputV, 0));
+                }
+                else
+                {
+                    anim.speed = 0f;
+                }
+
+                break;
+            }
         }
 
-        if (input != 0)
+        switch (isRunning)
         {
-            anim.SetBool("Walking", true);
-            if (input < 0)
-                transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
-            else
-                transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
-        }
-        else
-        {
-            anim.SetBool("Walking", false);
+            case false when (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)):
+            {
+                anim.SetBool("Walking", true);
+                anim.SetBool("Running", false);
+                if (inputH < 0)
+                    transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
+                else
+                    transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
+                break;
+            }
+            case true when (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)):
+            {
+                anim.SetBool("Running", true);
+                anim.SetBool("Walking", false);
+                if (inputH < 0)
+                    transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
+                else
+                    transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
+                break;
+            }
+            default:
+                anim.SetBool("Walking", false);
+                anim.SetBool("Running", false);
+                break;
         }
 
-        //gravity on the ladder
-        if (isLaddering == 1 && Input.GetKeyDown(KeyCode.UpArrow)) //사다리 타기
+        switch (isLaddering)
         {
-            rb.velocity = Vector3.zero;
-            isLaddering = 2;
-            rb.gravityScale = 0;
-            //rb.bodyType = RigidbodyType2D.Kinematic;
+            //gravity on the ladder
+            //사다리 타기
+            case 1 when Input.GetKeyDown(KeyCode.UpArrow):
+                rb.velocity = Vector3.zero;
+                isLaddering = 2;
+                rb.gravityScale = 0;
+                anim.SetBool("Laddering", true);
+                anim.speed = 1f;
+                //rb.bodyType = RigidbodyType2D.Kinematic;
+                break;
+            //탄 상태에서 점프
+            case 2 when Input.GetKeyDown(KeyCode.Space):
+                anim.speed = 1f;
+                isLaddering = 1;
+                rb.gravityScale = 1;
+                //rb.bodyType = RigidbodyType2D.Dynamic;
+                anim.SetBool("Jumpping", true);
+                anim.SetBool("Laddering", false);
+                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                break;
         }
-        else if (isLaddering == 2 && Input.GetKeyDown(KeyCode.Space))   //탄 상태에서 점프
-        {
-            isLaddering = 1;
-            rb.gravityScale = 1;
-            //rb.bodyType = RigidbodyType2D.Dynamic;
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        }
-        //Debug.Log($"ladder number : {isLaddering}");
 
 
         //jump
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!isJumping)
-            {
-                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            }
-            else if(isRope && fixJoint.connectedBody is not null)
+            //merge 11.08
+            if (!isJumping || (isRope && fixJoint.connectedBody is not null))
             {
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             }
@@ -101,10 +145,12 @@ public class PlayerMovement2 : MonoBehaviour
         {
             isJumping = false;
             isRope = false;
+            anim.SetBool("Jumpping", false);
         }
         else
         {
             isJumping = true;
+            anim.SetBool("Jumpping", true);
         }
     }
 
