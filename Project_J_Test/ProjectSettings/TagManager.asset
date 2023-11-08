@@ -16,6 +16,7 @@ TagManager:
   - Ladder
   - Trap
   - pRope
+  - MoveObj
   layers:
   - Default
   - TransparentFX

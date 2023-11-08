@@ -10,24 +10,24 @@ public class GetIntoPulley : MonoBehaviour
     bool isMoving;
     bool isInteract;
 
-    public float moveSpeed = 0.05f;
-    private int stoneNum;
-    public int maxStone = 3;
+    public  float moveSpeed = 0.05f;
+    private int   stoneNum;
+    public  int   maxStone = 3;
 
     Vector3 newLPos;
     Vector3 newRPos;
 
     void Start()
     {
-        LBasket = this.transform.GetChild(0).gameObject;
-        RBasket = this.transform.GetChild(1).gameObject;
+        LBasket  = this.transform.GetChild(0).gameObject;
+        RBasket  = this.transform.GetChild(1).gameObject;
         stoneNum = maxStone;
     }
 
     void Update()
     {
-        if(isMoving)
-        {            
+        if (isMoving)
+        {
             LBasket.transform.position = Vector3.MoveTowards(
                 LBasket.transform.position, newLPos, moveSpeed);
             RBasket.transform.position = Vector3.MoveTowards(
@@ -37,7 +37,7 @@ public class GetIntoPulley : MonoBehaviour
         if (LBasket.transform.position == newLPos && RBasket.transform.position == newRPos)
             isMoving = false;
 
-        if(Input.GetKeyDown(KeyCode.F) && isInteract && !isMoving)
+        if (Input.GetKeyDown(KeyCode.F) && isInteract && !isMoving)
         {
             if (stoneNum > 0)
             {
@@ -47,35 +47,31 @@ public class GetIntoPulley : MonoBehaviour
             else
             {
                 newLPos = new Vector3(
-               LBasket.transform.position.x, RBasket.transform.position.y, LBasket.transform.position.z);
+                    LBasket.transform.position.x, RBasket.transform.position.y, LBasket.transform.position.z);
                 newRPos = new Vector3(
                     RBasket.transform.position.x, LBasket.transform.position.y, RBasket.transform.position.z);
                 isMoving = true;
                 stoneNum = maxStone;
-            }            
+            }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))            
-        {
-            isInteract = true;
+        if (!collision.gameObject.CompareTag("Player")) return;
+        
+        isInteract = true;
 
-            if (transform.position.x > collision.gameObject.transform.position.x)
-                collision.transform.SetParent(this.gameObject.transform.GetChild(0));
-            else
-                collision.transform.SetParent(this.gameObject.transform.GetChild(1));
-        }
+        bool _isLeft = transform.position.x > collision.gameObject.transform.position.x;
+        collision.transform.SetParent(gameObject.transform.GetChild(_isLeft ? 0 : 1));
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            isInteract = false;
+        if (!collision.gameObject.CompareTag("Player")) return;
+        
+        isInteract = false;
 
-            collision.transform.SetParent(null);
-        }
+        collision.transform.SetParent(null);
     }
 }

@@ -25,6 +25,7 @@ public class GhostAct__Delivery : MonoBehaviour
             //transform.Translate(objectsPosition[0].transform.position - transform.position);
             pressF = true;
         }
+
 		if (pressF)
 		{
 			transform.position = Vector3.MoveTowards(transform.position,

@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class MoveCamera : MonoBehaviour
 {
-    GameObject player;
+    public GameObject targetObj;
     void Start()
     {
-        player = GameObject.Find("Player");
+        //targetObj = GameObject.Find("Player");
     }
 
     void Update()
     {
-        transform.position = new Vector3(player.transform.position.x, 
-            player.transform.position.y, transform.position.z);
+        /*if (Input.GetKeyDown(KeyCode.U))
+            targetObj = GameObject.Find("Cart");*/
+
+        transform.position = new Vector3(targetObj.transform.position.x,
+            targetObj.transform.position.y, transform.position.z);
     }
 }
