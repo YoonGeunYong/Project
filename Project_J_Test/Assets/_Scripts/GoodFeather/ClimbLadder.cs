@@ -9,6 +9,7 @@ public class ClimbLadder : MonoBehaviour
     Vector3 goalPos;
 
     public bool isOpen;
+    public float goalY;
     bool isInteract;
 
     void Start()
@@ -16,7 +17,7 @@ public class ClimbLadder : MonoBehaviour
         subLadder = this.transform.GetChild(0).gameObject;
         player = GameObject.FindWithTag("Player");
         goalPos = new Vector3(
-            subLadder.transform.position.x, subLadder.transform.position.y - 5.5f, subLadder.transform.position.z);
+            subLadder.transform.position.x, subLadder.transform.position.y - goalY, subLadder.transform.position.z);
     }
 
     void Update()
