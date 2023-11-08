@@ -161,7 +161,7 @@ public class PlayerMovement2 : MonoBehaviour
         if (other.gameObject.CompareTag("Ladder"))
         {
             isLaddering = 0;
-            rb.gravityScale = 1;
+            rb.gravityScale = 3;
         }
 
         if (other.gameObject.CompareTag("pRope"))
