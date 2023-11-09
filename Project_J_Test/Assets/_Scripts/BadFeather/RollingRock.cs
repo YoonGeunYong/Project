@@ -21,7 +21,7 @@ public class RollingRock : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(Vector3.back * (rollSpeed * Time.deltaTime));
+        transform.Rotate(Vector3.back * (-rollSpeed * Time.deltaTime) );
 
         if (time >= lifeTime)
             StartCoroutine(SharedFunction.DestroyFunc(gameObject, destroyTime));
