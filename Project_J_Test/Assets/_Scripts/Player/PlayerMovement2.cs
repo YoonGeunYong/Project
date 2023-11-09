@@ -211,7 +211,7 @@ public class PlayerMovement2 : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             other.GetComponent<DoorControll>().checkItem = true;
-            DataController.Instance.UseItem(1);
+            DataController.Instance.UseItem(GameManager.GM.itemInt);
         }
     }
 

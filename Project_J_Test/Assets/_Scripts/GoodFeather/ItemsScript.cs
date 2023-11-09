@@ -24,7 +24,7 @@ public class ItemsScript : MonoBehaviour
 	// Update is called once per frame
 	private void OnTriggerStay2D(Collider2D other)
 	{
-		if(other.CompareTag("Player") && Input.GetKeyDown(KeyCode.E))
+		if(other.CompareTag("Player") && Input.GetKey(KeyCode.E))
 		{
 			itemManager.GetItem(item, sprite);
 			gameObject.SetActive(false);
