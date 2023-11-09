@@ -13,6 +13,7 @@ public class PlayerMovement2 : MonoBehaviour
     Rigidbody2D rb;
     FixedJoint2D fixJoint;
     Animator anim;
+    GameObject box;
     public ItemManager itemManager;
 
     public bool isRunning;
@@ -21,6 +22,7 @@ public class PlayerMovement2 : MonoBehaviour
     public bool isRope;
     public float inputH;
     public float inputV;
+    bool isPush;
 
     void Start()
     {
@@ -123,6 +125,17 @@ public class PlayerMovement2 : MonoBehaviour
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 break;
         }
+        
+        if(isPush && Input.GetKey(KeyCode.F))
+        {
+            box.gameObject.GetComponent<MoveBox>().isMove = true;
+        }
+        
+        if(isPush && Input.GetKeyUp(KeyCode.F))
+        {
+            box.gameObject.GetComponent<MoveBox>().isMove = false;
+            isPush = false;
+        }
 
 
         //jump
@@ -163,6 +176,12 @@ public class PlayerMovement2 : MonoBehaviour
             Debug.Log("Damaged!");
             GameManager.GM.hpGauge -= 0.34f;
             DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
+        }
+        
+        if(!isPush && other.gameObject.CompareTag("MoveObj"))
+        {            
+            isPush = true;
+            box = other.gameObject;
         }
     }
 
@@ -208,6 +227,14 @@ public class PlayerMovement2 : MonoBehaviour
         if (other.gameObject.CompareTag("pRope"))
         {
             isRope = false;
+        }
+    }
+
+    public void ThrowStone()
+    {
+        if (GameManager.GM.itemNum == 2)
+        {
+            
         }
     }
 }
