@@ -6,11 +6,10 @@ public class ItemsScript : MonoBehaviour
 {
     [SerializeField] int item;
 
-	ItemManager itemManager;
+	public ItemManager itemManager;
 	Sprite sprite;
     void Start()
     {
-		itemManager = GameObject.Find("ItemBar").GetComponent<ItemManager>();
 		sprite = GetComponent<SpriteRenderer>().sprite;
 		for (int i = 0; i < itemManager.chechItemState.Length; i++)
 		{
@@ -23,9 +22,9 @@ public class ItemsScript : MonoBehaviour
     }
 
 	// Update is called once per frame
-	private void OnTriggerEnter2D(Collider2D other)
+	private void OnTriggerStay2D(Collider2D other)
 	{
-		if(other.CompareTag("Player"))
+		if(other.CompareTag("Player") && Input.GetKeyDown(KeyCode.E))
 		{
 			itemManager.GetItem(item, sprite);
 			gameObject.SetActive(false);

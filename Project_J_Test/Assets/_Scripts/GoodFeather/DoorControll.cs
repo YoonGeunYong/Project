@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class DoorControll : MonoBehaviour
 {
+    public bool checkItem;
     float positionY;
     // Start is called before the first frame update
     void Start()
@@ -15,7 +16,7 @@ public class DoorControll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(transform.position.y < positionY)
+        if(checkItem && transform.position.y < positionY)
             transform.position = Vector3.Lerp(transform.position,
                 new Vector3(transform.position.x, positionY, transform.position.z), 0.01f);
     }

@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField] bool _dustInCheck;
 	[SerializeField][Range(0f, 1f)] float _hpGauge = 1f;
+	[SerializeField] int _itemNum = 0;
+	[SerializeField] int _itemInt = 0;
 
 
 	public bool dustInCheck
@@ -26,6 +28,18 @@ public class GameManager : MonoBehaviour
 
 			else _hpGauge = value;
 		}
+	}
+	
+	public int itemNum
+	{
+		get { return _itemNum; }
+		set { _itemNum = value; }
+	}
+	
+	public int itemInt
+	{
+		get { return _itemInt; }
+		set { _itemInt = value; }
 	}
 
 	private void Awake()
