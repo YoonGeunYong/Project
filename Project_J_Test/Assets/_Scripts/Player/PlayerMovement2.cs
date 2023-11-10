@@ -2,24 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement2 : MonoBehaviour
 {
     public float speed = 10.0f;      //요괴보다 조금 빠르게 설정함(요괴 speed = 3)
     public float jumpForce = 14.0f;
     public float rayLength = 3f;
-    public int itemNum = 0;
 
     Rigidbody2D rb;
     FixedJoint2D fixJoint;
     Animator anim;
     GameObject box;
-    public ItemManager itemManager;
+    public GameObject pebbleStone;
+    public GameObject dropWheel;
 
     public bool isRunning;
     public bool isJumping;
     private int isLaddering;    //타지않음 0, 닿았음 1, 탔음 2 
     public bool isRope;
+    public bool haveStone;
     public float inputH;
     public float inputV;
     bool isPush;
@@ -150,6 +152,28 @@ public class PlayerMovement2 : MonoBehaviour
             fixJoint.connectedBody = null;
             fixJoint.enabled = false;
         }
+
+        switch (GameManager.GM.itemNum)
+        {
+            case 2:
+                if (haveStone && Input.GetKeyDown(KeyCode.Q))
+                {
+                    DataController.Instance.UseItem(GameManager.GM.itemInt);
+                    haveStone = false;
+                    pebbleStone = Instantiate(pebbleStone, transform.position + new Vector3(2f, 2f, 0f), Quaternion.identity);
+                    pebbleStone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);                    
+                }
+                break;
+            case 3: 
+                if (Input.GetKeyDown(KeyCode.Q)) 
+                {
+                    DataController.Instance.UseItem(GameManager.GM.itemInt);
+                    dropWheel = Instantiate(dropWheel, transform.position + new Vector3(2f, 0f, 0f), Quaternion.identity);
+                    dropWheel.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, -0.2f), ForceMode2D.Impulse);
+                }
+                break;
+            
+        }
         
         //jump raycast
         Debug.DrawRay(transform.position, Vector3.down * rayLength, new Color(1, 0, 0));
@@ -173,9 +197,7 @@ public class PlayerMovement2 : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Monster"))
         {
-            Debug.Log("Damaged!");
-            GameManager.GM.hpGauge -= 0.34f;
-            DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
+            SceneManager.LoadScene("CreateMap");
         }
         
         if(!isPush && other.gameObject.CompareTag("MoveObj"))
@@ -227,14 +249,6 @@ public class PlayerMovement2 : MonoBehaviour
         if (other.gameObject.CompareTag("pRope"))
         {
             isRope = false;
-        }
-    }
-
-    public void ThrowStone()
-    {
-        if (GameManager.GM.itemNum == 2)
-        {
-            
         }
     }
 }

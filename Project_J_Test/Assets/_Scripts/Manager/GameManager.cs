@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField][Range(0f, 1f)] float _hpGauge = 1f;
 	[SerializeField] int _itemNum = 0;
 	[SerializeField] int _itemInt = 0;
+	[SerializeField] bool _pebbleStone = false;
 
 
 	public bool dustInCheck
@@ -40,6 +41,12 @@ public class GameManager : MonoBehaviour
 	{
 		get { return _itemInt; }
 		set { _itemInt = value; }
+	}
+	
+	public bool pebbleStone
+	{
+		get { return _pebbleStone; }
+		set { _pebbleStone = value; }
 	}
 
 	private void Awake()

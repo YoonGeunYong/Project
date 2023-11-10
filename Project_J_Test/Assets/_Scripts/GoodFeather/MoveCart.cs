@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MoveCart : MonoBehaviour
@@ -44,12 +45,20 @@ public class MoveCart : MonoBehaviour
         anim.SetBool("isCart", false);
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if (collision.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            player = collision.gameObject;
+            player = other.gameObject;
             isRide = true;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            isRide = false;            
         }
     }
 }

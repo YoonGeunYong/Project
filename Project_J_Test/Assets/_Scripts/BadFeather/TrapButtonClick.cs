@@ -6,14 +6,19 @@ public class TrapButtonClick : MonoBehaviour
 {
     void Start()
     {
-        transform.GetChild(0).gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (!collision.gameObject.CompareTag("Interaction") && !collision.CompareTag("Player")) return;
+        if (collision.gameObject.CompareTag("Interaction"))
         {
-            transform.GetChild(0).GetComponent<Rigidbody2D>().gravityScale = 3;
+            Destroy(collision.gameObject);
+            gameObject.SetActive(false);
+        }
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 }
