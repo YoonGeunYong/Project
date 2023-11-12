@@ -5,18 +5,18 @@ using UnityEngine;
 public class FadeOutAndDestroy : MonoBehaviour
 {
     public float fadeOutTimer;
-    private SpriteRenderer _renderer;
+    SpriteRenderer renderer;
 
     void Start()
     {
-        _renderer = GetComponent<SpriteRenderer>();
+        renderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        Color fade = _renderer.color;
+        Color fade = renderer.color;
         fade.a = Mathf.MoveTowards(fade.a, 0, 1/fadeOutTimer * Time.deltaTime);
-        _renderer.color = fade;
+        renderer.color = fade;
 
 
         if (fade.a <= 0)
