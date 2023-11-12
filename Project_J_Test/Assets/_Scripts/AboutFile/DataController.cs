@@ -15,6 +15,7 @@ public class PlayerData
     public bool[] itemState = new bool[4];
     public int[] items = new int[4];
     public bool[] checkPoint = new bool[5];
+    public GameObject[] checkPointObj = new GameObject[15];
 }
 
 public class DataController : MonoBehaviour

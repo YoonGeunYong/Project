@@ -14,7 +14,12 @@ public class ClimbLadder : MonoBehaviour
 
     void Start()
     {
-        subLadder = this.transform.GetChild(0).gameObject;
+        if (transform.childCount > 0)
+        {
+            subLadder = this.transform.GetChild(0).gameObject;
+            goalPos = new Vector3(subLadder.transform.position.x,
+                subLadder.transform.position.y - goalY, subLadder.transform.position.z);
+        }
         player = GameObject.FindWithTag("Player");
         goalPos = new Vector3(subLadder.transform.position.x,
             subLadder.transform.position.y - goalY, subLadder.transform.position.z);
@@ -22,7 +27,7 @@ public class ClimbLadder : MonoBehaviour
 
     void Update()
     {
-        if (isOpen)
+        if (subLadder is not null && isOpen && subLadder.transform.position != goalPos )
         {
             subLadder.transform.position = Vector3.MoveTowards(
                 subLadder.transform.position, goalPos, 0.1f);

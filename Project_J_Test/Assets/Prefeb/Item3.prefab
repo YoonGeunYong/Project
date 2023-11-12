@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: 3
+  removeItem: 1
   itemManager: {fileID: 0}
 --- !u!58 &7255705213029425860
 CircleCollider2D:

@@ -78,6 +78,11 @@ public class ItemManager : MonoBehaviour
                 transform.GetChild(i).GetComponent<Image>().sprite = image;
                 chechItemState[i] = true;
                 chechItems[i] = number;
+                if (GameManager.GM.itemInt == 1)
+                {
+                    GameManager.GM.itemNum = number;
+                }
+
                 break;
             }
             
