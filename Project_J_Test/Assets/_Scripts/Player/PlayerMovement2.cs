@@ -2,28 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerMovement2 : MonoBehaviour
 {
-    public float speed = 10.0f;      //ìš”ê´´ë³´ë‹¤ ì¡°ê¸ˆ ë¹ ë¥´ê²Œ ì„¤ì •í•¨(ìš”ê´´ speed = 3)
+    public float speed = 10.0f;      //¿ä±«º¸´Ù Á¶±İ ºü¸£°Ô ¼³Á¤ÇÔ(¿ä±« speed = 3)
     public float jumpForce = 14.0f;
     public float rayLength = 3f;
+    public int itemNum = 0;
 
     Rigidbody2D rb;
     FixedJoint2D fixJoint;
     Animator anim;
     GameObject box;
-    public GameObject pebbleStone;
-    public GameObject dropWheel;
     GameObject ladder;
     public ItemManager itemManager;
 
     public bool isRunning;
     public bool isJumping;
-    private int isLaddering;    //íƒ€ì§€ì•ŠìŒ 0, ë‹¿ì•˜ìŒ 1, íƒ”ìŒ 2 
+    private int isLaddering;    //Å¸Áö¾ÊÀ½ 0, ´ê¾ÒÀ½ 1, ÅÀÀ½ 2 
     public bool isRope;
-    public bool haveStone;
     public float inputH;
     public float inputV;
     bool isPush;
@@ -43,7 +40,7 @@ public class PlayerMovement2 : MonoBehaviour
         switch (isLaddering)
         {
             //move
-            //ë•…ì— ìˆì„ ë•Œ
+            //¶¥¿¡ ÀÖÀ» ¶§
             case < 2:
             {
                 inputH = Input.GetAxis("Horizontal");
@@ -60,7 +57,7 @@ public class PlayerMovement2 : MonoBehaviour
 
                 break;
             }
-            //ì‚¬ë‹¤ë¦¬ì— ìˆì„ ë•Œ
+            //»ç´Ù¸®¿¡ ÀÖÀ» ¶§
             case 2:
             {
                 inputV = Input.GetAxis("Vertical");
@@ -109,7 +106,7 @@ public class PlayerMovement2 : MonoBehaviour
         switch (isLaddering)
         {
             //gravity on the ladder
-            //ì‚¬ë‹¤ë¦¬ íƒ€ê¸°
+            //»ç´Ù¸® Å¸±â
             case 1 when Input.GetKeyDown(KeyCode.UpArrow):
                 this.transform.position = new Vector3(ladder.transform.position.x,
                     this.transform.position.y, this.transform.position.z);
@@ -120,7 +117,7 @@ public class PlayerMovement2 : MonoBehaviour
                 anim.speed = 1f;
                 //rb.bodyType = RigidbodyType2D.Kinematic;
                 break;
-            //íƒ„ ìƒíƒœì—ì„œ ì í”„
+            //Åº »óÅÂ¿¡¼­ Á¡ÇÁ
             case 2 when Input.GetKeyDown(KeyCode.Space):
                 anim.speed = 1f;
                 isLaddering = 1;
@@ -163,28 +160,6 @@ public class PlayerMovement2 : MonoBehaviour
             fixJoint.connectedBody = null;
             fixJoint.enabled = false;
         }
-
-        switch (GameManager.GM.itemNum)
-        {
-            case 2:
-                if (haveStone && Input.GetKeyDown(KeyCode.Q))
-                {
-                    DataController.Instance.UseItem(GameManager.GM.itemInt);
-                    haveStone = false;
-                    pebbleStone = Instantiate(pebbleStone, transform.position + new Vector3(2f, 2f, 0f), Quaternion.identity);
-                    pebbleStone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);                    
-                }
-                break;
-            case 3: 
-                if (Input.GetKeyDown(KeyCode.Q)) 
-                {
-                    DataController.Instance.UseItem(GameManager.GM.itemInt);
-                    dropWheel = Instantiate(dropWheel, transform.position + new Vector3(2f, 0f, 0f), Quaternion.identity);
-                    dropWheel.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, -0.2f), ForceMode2D.Impulse);
-                }
-                break;
-            
-        }
         
         //jump raycast
         Debug.DrawRay(transform.position, Vector3.down * rayLength, new Color(1, 0, 0));
@@ -208,7 +183,9 @@ public class PlayerMovement2 : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Monster"))
         {
-            SceneManager.LoadScene("CreateMap");
+            Debug.Log("Damaged!");
+            GameManager.GM.hpGauge -= 0.34f;
+            DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
         }
         
         if(!isPush && other.gameObject.CompareTag("MoveObj"))
@@ -251,7 +228,7 @@ public class PlayerMovement2 : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             other.GetComponent<DoorControll>().checkItem = true;
-            DataController.Instance.UseItem(GameManager.GM.itemInt);
+            DataController.Instance.UseItem(1);
         }
     }
 
@@ -268,6 +245,14 @@ public class PlayerMovement2 : MonoBehaviour
         if (other.gameObject.CompareTag("pRope"))
         {
             isRope = false;
+        }
+    }
+
+    public void ThrowStone()
+    {
+        if (GameManager.GM.itemNum == 2)
+        {
+            
         }
     }
 }
