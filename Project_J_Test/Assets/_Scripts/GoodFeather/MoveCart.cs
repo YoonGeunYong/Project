@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -23,6 +24,8 @@ public class MoveCart : MonoBehaviour
         {            
             player.SetActive(false);
             mainCamera.GetComponent<MoveCamera>().targetObj = this.gameObject;
+            mainCamera.GetComponent<MoveCamera>().enabled = true;            
+            mainCamera.GetComponent<CinemachineBrain>().enabled = false;
             this.transform.GetChild(0).gameObject.SetActive(true);           
             isRide = false;
             
@@ -34,12 +37,14 @@ public class MoveCart : MonoBehaviour
     {
         
         anim.SetBool("isCart", true);
-        yield return new WaitForSeconds(3f);
-        player.transform.position = transform.position;
+        yield return new WaitForSeconds(9f);
+        player.transform.position = transform.position;               
         this.transform.GetChild(0).gameObject.SetActive(false);
-        yield return null;      //카트에서 내리는 애니메이션 재생 시 시간 대기 추가
+        yield return new WaitForSeconds(0.3f);      //카트에서 내리는 애니메이션 재생 시 시간 대기 추가
+        mainCamera.GetComponent<MoveCamera>().enabled = false;
         player.gameObject.SetActive(true);
-        mainCamera.GetComponent<MoveCamera>().targetObj = player;
+        mainCamera.GetComponent<CinemachineBrain>().enabled = true;
+        
 
         isActive = false;        
         anim.SetBool("isCart", false);

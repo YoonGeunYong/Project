@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerMovement2 : MonoBehaviour
 {
-    public float speed = 10.0f;      //¿ä±«º¸´Ù Á¶±İ ºü¸£°Ô ¼³Á¤ÇÔ(¿ä±« speed = 3)
+    public float speed = 10.0f;      //ìš”ê´´ë³´ë‹¤ ì¡°ê¸ˆ ë¹ ë¥´ê²Œ ì„¤ì •í•¨(ìš”ê´´ speed = 3)
     public float jumpForce = 14.0f;
     public float rayLength = 3f;
 
@@ -16,10 +16,12 @@ public class PlayerMovement2 : MonoBehaviour
     GameObject box;
     public GameObject pebbleStone;
     public GameObject dropWheel;
+    GameObject ladder;
+    public ItemManager itemManager;
 
     public bool isRunning;
     public bool isJumping;
-    private int isLaddering;    //Å¸Áö¾ÊÀ½ 0, ´ê¾ÒÀ½ 1, ÅÀÀ½ 2 
+    private int isLaddering;    //íƒ€ì§€ì•ŠìŒ 0, ë‹¿ì•˜ìŒ 1, íƒ”ìŒ 2 
     public bool isRope;
     public bool haveStone;
     public float inputH;
@@ -41,7 +43,7 @@ public class PlayerMovement2 : MonoBehaviour
         switch (isLaddering)
         {
             //move
-            //¶¥¿¡ ÀÖÀ» ¶§
+            //ë•…ì— ìˆì„ ë•Œ
             case < 2:
             {
                 inputH = Input.GetAxis("Horizontal");
@@ -58,7 +60,7 @@ public class PlayerMovement2 : MonoBehaviour
 
                 break;
             }
-            //»ç´Ù¸®¿¡ ÀÖÀ» ¶§
+            //ì‚¬ë‹¤ë¦¬ì— ìˆì„ ë•Œ
             case 2:
             {
                 inputV = Input.GetAxis("Vertical");
@@ -107,8 +109,10 @@ public class PlayerMovement2 : MonoBehaviour
         switch (isLaddering)
         {
             //gravity on the ladder
-            //»ç´Ù¸® Å¸±â
+            //ì‚¬ë‹¤ë¦¬ íƒ€ê¸°
             case 1 when Input.GetKeyDown(KeyCode.UpArrow):
+                this.transform.position = new Vector3(ladder.transform.position.x,
+                    this.transform.position.y, this.transform.position.z);
                 rb.velocity = Vector3.zero;
                 isLaddering = 2;
                 rb.gravityScale = 0;
@@ -116,7 +120,7 @@ public class PlayerMovement2 : MonoBehaviour
                 anim.speed = 1f;
                 //rb.bodyType = RigidbodyType2D.Kinematic;
                 break;
-            //Åº »óÅÂ¿¡¼­ Á¡ÇÁ
+            //íƒ„ ìƒíƒœì—ì„œ ì í”„
             case 2 when Input.GetKeyDown(KeyCode.Space):
                 anim.speed = 1f;
                 isLaddering = 1;
@@ -127,16 +131,23 @@ public class PlayerMovement2 : MonoBehaviour
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 break;
         }
-        
-        if(isPush && Input.GetKey(KeyCode.F))
+
+        if (isPush)
         {
-            box.gameObject.GetComponent<MoveBox>().isMove = true;
-        }
-        
-        if(isPush && Input.GetKeyUp(KeyCode.F))
-        {
-            box.gameObject.GetComponent<MoveBox>().isMove = false;
-            isPush = false;
+            MoveBox moveBox = box.gameObject.GetComponent<MoveBox>();
+            moveBox.isMove = 1;
+
+            if (Input.GetKey(KeyCode.F))
+            {
+                moveBox.isMove = 2;
+            }
+
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                moveBox.isMove = 0;
+                moveBox.ZeroVelocity();
+                isPush = false;
+            }
         }
 
 
@@ -207,6 +218,12 @@ public class PlayerMovement2 : MonoBehaviour
         }
     }
 
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (!isPush && collision.gameObject.CompareTag("MoveObj"))
+            isPush = false;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Ladder"))
@@ -215,6 +232,7 @@ public class PlayerMovement2 : MonoBehaviour
             if (other.GetComponent<ClimbLadder>().isOpen)
             {
                 isLaddering = 1;
+                ladder = other.gameObject;
             }
         }
 
@@ -244,6 +262,7 @@ public class PlayerMovement2 : MonoBehaviour
         {
             isLaddering = 0;
             rb.gravityScale = 3;
+            ladder = null;
         }
 
         if (other.gameObject.CompareTag("pRope"))

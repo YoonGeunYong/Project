@@ -21,6 +21,8 @@ public class ClimbLadder : MonoBehaviour
                 subLadder.transform.position.y - goalY, subLadder.transform.position.z);
         }
         player = GameObject.FindWithTag("Player");
+        goalPos = new Vector3(subLadder.transform.position.x,
+            subLadder.transform.position.y - goalY, subLadder.transform.position.z);
     }
 
     void Update()

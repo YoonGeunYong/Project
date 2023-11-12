@@ -30,18 +30,22 @@ public class Shuby_PlayerMovement2 : MonoBehaviour
 
     void Update()
     {
-        if(isPush && Input.GetKey(KeyCode.F))
+        if(isPush)
         {
-            Debug.Log("asdf");
-            box.gameObject.GetComponent<MoveBox>().isMove = true;
-            //box.transform.position = box.transform.position + Vector3.right;
-        }
-        
-        if(isPush && Input.GetKeyUp(KeyCode.F))
-        {
-            Debug.Log("QQQq");
-            box.gameObject.GetComponent<MoveBox>().isMove = false;
-            isPush = false;
+            MoveBox moveBox = box.gameObject.GetComponent<MoveBox>();
+            moveBox.isMove = 1;
+
+            if(Input.GetKey(KeyCode.F))
+            {
+                moveBox.isMove = 2;
+            }
+
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                moveBox.isMove = 0;
+                moveBox.ZeroVelocity();
+                isPush = false;
+            }
         }
 
         //move
@@ -122,7 +126,6 @@ public class Shuby_PlayerMovement2 : MonoBehaviour
         {            
             isPush = true;
             box = other.gameObject;
-
             //localY = Mathf.Abs(box.transform.position.y - transform.position.y);
         }
     }
