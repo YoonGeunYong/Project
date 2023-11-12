@@ -14,7 +14,6 @@ public class PlayerMovement2 : MonoBehaviour
     FixedJoint2D fixJoint;
     Animator anim;
     GameObject box;
-    GameObject ladder;
     public ItemManager itemManager;
 
     public bool isRunning;
@@ -108,8 +107,6 @@ public class PlayerMovement2 : MonoBehaviour
             //gravity on the ladder
             //사다리 타기
             case 1 when Input.GetKeyDown(KeyCode.UpArrow):
-                this.transform.position = new Vector3(ladder.transform.position.x,
-                    this.transform.position.y, this.transform.position.z);
                 rb.velocity = Vector3.zero;
                 isLaddering = 2;
                 rb.gravityScale = 0;
@@ -128,23 +125,16 @@ public class PlayerMovement2 : MonoBehaviour
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 break;
         }
-
-        if (isPush)
+        
+        if(isPush && Input.GetKey(KeyCode.F))
         {
-            MoveBox moveBox = box.gameObject.GetComponent<MoveBox>();
-            moveBox.isMove = 1;
-
-            if (Input.GetKey(KeyCode.F))
-            {
-                moveBox.isMove = 2;
-            }
-
-            if (Input.GetKeyUp(KeyCode.F))
-            {
-                moveBox.isMove = 0;
-                moveBox.ZeroVelocity();
-                isPush = false;
-            }
+            box.gameObject.GetComponent<MoveBox>().isMove = true;
+        }
+        
+        if(isPush && Input.GetKeyUp(KeyCode.F))
+        {
+            box.gameObject.GetComponent<MoveBox>().isMove = false;
+            isPush = false;
         }
 
 
@@ -195,12 +185,6 @@ public class PlayerMovement2 : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (!isPush && collision.gameObject.CompareTag("MoveObj"))
-            isPush = false;
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Ladder"))
@@ -209,7 +193,6 @@ public class PlayerMovement2 : MonoBehaviour
             if (other.GetComponent<ClimbLadder>().isOpen)
             {
                 isLaddering = 1;
-                ladder = other.gameObject;
             }
         }
 
@@ -239,7 +222,6 @@ public class PlayerMovement2 : MonoBehaviour
         {
             isLaddering = 0;
             rb.gravityScale = 3;
-            ladder = null;
         }
 
         if (other.gameObject.CompareTag("pRope"))
