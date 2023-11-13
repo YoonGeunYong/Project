@@ -2,10 +2,12 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Assets/_Scripts/AboutFile/DataController.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/_Scripts/AboutFile/SelectSlot.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/_Scripts/BadFeather/SpawnRock.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/_Scripts/GoodFeather/GhostAct__Delivery.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/_Scripts/GoodFeather/MoveCart.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/_Scripts/Player/PlayerMovement2.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/_Scripts/Player/Shuby_PlayerMovement2.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/_Scripts/Player/TargetControl.cs" charset="x-windows-949" />
   </component>
 </project>

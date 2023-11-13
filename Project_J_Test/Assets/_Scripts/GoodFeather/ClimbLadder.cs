@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,7 @@ public class ClimbLadder : MonoBehaviour
 
     public bool isOpen;
     public float goalY;
-    bool isInteract;
+    public bool isInteract;
 
     void Start()
     {
@@ -30,23 +31,5 @@ public class ClimbLadder : MonoBehaviour
             subLadder.transform.position = Vector3.MoveTowards(
                 subLadder.transform.position, goalPos, 0.1f);
         }
-
-        if (Input.GetKeyDown(KeyCode.F) && isInteract)
-        {
-            if (!isOpen)
-                isOpen = true;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-            isInteract = true;
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-            isInteract = false;
     }
 }

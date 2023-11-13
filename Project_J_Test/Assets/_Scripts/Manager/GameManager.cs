@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] int _itemNum = 0;
 	[SerializeField] int _itemInt = 0;
 	[SerializeField] bool _pebbleStone = false;
+	[SerializeField] bool _dieing = false;
 
 	public bool dustInCheck
 	{
@@ -46,6 +47,12 @@ public class GameManager : MonoBehaviour
 	{
 		get { return _pebbleStone; }
 		set { _pebbleStone = value; }
+	}
+	
+	public bool dieing
+	{
+		get { return _dieing; }
+		set { _dieing = value; }
 	}
 	
 	private void Awake()

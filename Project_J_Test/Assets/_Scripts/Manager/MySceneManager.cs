@@ -23,7 +23,7 @@ public class MySceneManager : MonoBehaviour
 
 	public void CreateNewGame()
 	{
-		SceneManager.LoadSceneAsync("Chapter_1");
+		SceneManager.LoadSceneAsync("Create");
 		//TODO : Create new Game and GO new Scene
 	}
 }

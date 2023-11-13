@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -14,21 +15,24 @@ public class PlayerMovement2 : MonoBehaviour
     FixedJoint2D fixJoint;
     Animator anim;
     GameObject box;
+    GameObject ladder;
     public GameObject pebbleStone;
     public GameObject dropWheel;
 
+    private int isLaddering; //타지않음 0, 닿았음 1, 탔음 2
     public bool isRunning;
     public bool isJumping;
-    private int isLaddering;    //타지않음 0, 닿았음 1, 탔음 2 
     public bool isRope;
     public bool haveStone;
     public float inputH;
     public float inputV;
-    bool isPush;
+    public bool isPush;
+    public bool isPushing;
 
     void Start()
     {
         fixJoint = GetComponent<FixedJoint2D>();
+        fixJoint.enabled = false;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         DataController.Instance.LoadObjPosition();
@@ -37,6 +41,11 @@ public class PlayerMovement2 : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.GM.dieing)
+        {
+            anim.speed = 0f;
+            return;
+        }
         switch (isLaddering)
         {
             //move
@@ -75,32 +84,35 @@ public class PlayerMovement2 : MonoBehaviour
             }
         }
 
-        switch (isRunning)
+        if (!isPushing)
         {
-            case false when (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)):
+            switch (isRunning)
             {
-                anim.SetBool("Walking", true);
-                anim.SetBool("Running", false);
-                if (inputH < 0)
-                    transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
-                else
-                    transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
-                break;
+                case false when (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)):
+                {
+                    anim.SetBool("Walking", true);
+                    anim.SetBool("Running", false);
+                    if (inputH < 0)
+                        transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
+                    else
+                        transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
+                    break;
+                }
+                case true when (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)):
+                {
+                    anim.SetBool("Running", true);
+                    anim.SetBool("Walking", false);
+                    if (!isPush && inputH < 0)
+                        transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
+                    else
+                        transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
+                    break;
+                }
+                default:
+                    anim.SetBool("Walking", false);
+                    anim.SetBool("Running", false);
+                    break;
             }
-            case true when (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)):
-            {
-                anim.SetBool("Running", true);
-                anim.SetBool("Walking", false);
-                if (inputH < 0)
-                    transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
-                else
-                    transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
-                break;
-            }
-            default:
-                anim.SetBool("Walking", false);
-                anim.SetBool("Running", false);
-                break;
         }
 
         switch (isLaddering)
@@ -109,6 +121,7 @@ public class PlayerMovement2 : MonoBehaviour
             //사다리 타기
             case 1 when Input.GetKeyDown(KeyCode.UpArrow):
                 rb.velocity = Vector3.zero;
+                transform.position = new Vector3(ladder.transform.position.x, transform.position.y, 0);
                 isLaddering = 2;
                 rb.gravityScale = 0;
                 anim.SetBool("Laddering", true);
@@ -121,20 +134,24 @@ public class PlayerMovement2 : MonoBehaviour
                 isLaddering = 1;
                 rb.gravityScale = 1;
                 //rb.bodyType = RigidbodyType2D.Dynamic;
-                anim.SetBool("Jumpping", true);
                 anim.SetBool("Laddering", false);
+                anim.SetBool("Jumpping", true);
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 break;
         }
-        
-        if(isPush && Input.GetKey(KeyCode.F))
+
+        if (isPush && Input.GetKeyDown(KeyCode.F))
         {
             box.gameObject.GetComponent<MoveBox>().isMove = true;
+            anim.SetBool("Box", true);
+            isPushing = true;
         }
-        
-        if(isPush && Input.GetKeyUp(KeyCode.F))
+
+        if (Input.GetKeyUp(KeyCode.F))
         {
             box.gameObject.GetComponent<MoveBox>().isMove = false;
+            anim.SetBool("Box", false);
+            isPushing = false;
             isPush = false;
         }
 
@@ -150,8 +167,9 @@ public class PlayerMovement2 : MonoBehaviour
 
             fixJoint.connectedBody = null;
             fixJoint.enabled = false;
+            anim.SetBool("Rope", false);
         }
-        
+
         switch (GameManager.GM.itemNum)
         {
             case 2:
@@ -159,24 +177,29 @@ public class PlayerMovement2 : MonoBehaviour
                 {
                     DataController.Instance.UseItem(GameManager.GM.itemInt);
                     haveStone = false;
-                    pebbleStone = Instantiate(pebbleStone, transform.position + new Vector3(2f, 2f, 0f), Quaternion.identity);
-                    pebbleStone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);                    
+                    pebbleStone = Instantiate(pebbleStone, transform.position + new Vector3(2f, 2f, 0f),
+                        Quaternion.identity);
+                    pebbleStone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);
                 }
+
                 break;
-            case 3: 
-                if (Input.GetKeyDown(KeyCode.Q)) 
+            case 3:
+                if (Input.GetKeyDown(KeyCode.Q))
                 {
                     DataController.Instance.UseItem(GameManager.GM.itemInt);
-                    dropWheel = Instantiate(dropWheel, transform.position + new Vector3(2f, 0f, 0f), Quaternion.identity);
+                    dropWheel = Instantiate(dropWheel, transform.position + new Vector3(2f, 0f, 0f),
+                        Quaternion.identity);
                     dropWheel.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, -0.2f), ForceMode2D.Impulse);
                 }
+
                 break;
-            
+
         }
-        
+
         //jump raycast
         Debug.DrawRay(transform.position, Vector3.down * rayLength, new Color(1, 0, 0));
-        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector3.down, rayLength, LayerMask.GetMask("Platform"));
+        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector3.down, rayLength,
+            LayerMask.GetMask("Platform"));
 
         //jump check with eyes
         if (rayHit.collider is not null)
@@ -196,7 +219,7 @@ public class PlayerMovement2 : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Monster"))
         {
-            SceneManager.LoadScene("CreateMap");
+            GameManager.GM.dieing = true;
         }
         
         if(!isPush && other.gameObject.CompareTag("MoveObj"))
@@ -206,11 +229,19 @@ public class PlayerMovement2 : MonoBehaviour
         }
     }
 
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        if(other.gameObject.CompareTag("MoveObj"))
+        {            
+            isPush = false;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Ladder"))
         {
-            Debug.Log(other.gameObject.name);
+            ladder = other.gameObject;
             if (other.GetComponent<ClimbLadder>().isOpen)
             {
                 isLaddering = 1;
@@ -222,6 +253,7 @@ public class PlayerMovement2 : MonoBehaviour
             Rigidbody2D rig = other.gameObject.GetComponent<Rigidbody2D>();
             fixJoint.enabled = true;
             fixJoint.connectedBody = rig;
+            anim.SetBool("Rope", true);
             isRope = true;
         }
     }
@@ -229,7 +261,7 @@ public class PlayerMovement2 : MonoBehaviour
     void OnTriggerStay2D(Collider2D other)
     {
         if (!other.CompareTag("Interaction") || GameManager.GM.itemNum != 1) return;
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.Q))
         {
             other.GetComponent<DoorControll>().checkItem = true;
             DataController.Instance.UseItem(GameManager.GM.itemInt);
@@ -243,6 +275,7 @@ public class PlayerMovement2 : MonoBehaviour
         {
             isLaddering = 0;
             rb.gravityScale = 3;
+            anim.SetBool("Laddering", false);
         }
 
         if (other.gameObject.CompareTag("pRope"))
