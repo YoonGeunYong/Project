@@ -1,19 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TrapButtonClick : MonoBehaviour
 {
-    void Start()
+    private bool _isActive;
+
+    private void Start()
     {
-        transform.GetChild(0).gameObject.GetComponent<Rigidbody2D>().gravityScale = 0;
+        if(DataController.Instance.nowPlayerData.isActiveTrap)
+            gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (!collision.gameObject.CompareTag("Interaction") && !collision.CompareTag("Player")) return;
+        if (collision.gameObject.CompareTag("Interaction"))
         {
-            transform.GetChild(0).GetComponent<Rigidbody2D>().gravityScale = 3;
+            Destroy(collision.gameObject);
+            gameObject.SetActive(false);
+            DataController.Instance.nowPlayerData.isActiveTrap = true;
         }
     }
 }

@@ -10,11 +10,14 @@ public class PlayerData
 {
     // 시간, 위치, 아이템
     public int time = 1;
-    public float playerHP = 1f;
     public Vector3 playerPositionTutorial = new Vector3(0f, 0f, 0f);
     public bool[] itemState = new bool[4];
     public int[] items = new int[4];
-    public bool[] checkPoint = new bool[5];
+    public bool[] checkPoint = new bool[8];
+    public Vector3[] setObjPosition = new Vector3[8];
+    public bool[] doorused = new bool[4];
+    public bool activedCart = false;
+    public bool isActiveTrap = false;
 }
 
 public class DataController : MonoBehaviour
@@ -28,6 +31,8 @@ public class DataController : MonoBehaviour
     public string filePath;
     public int nowSlot;
     public bool[] savefile = new bool[3];
+    
+    private GameObject setObj;
 
 
     static GameObject Container
@@ -40,7 +45,7 @@ public class DataController : MonoBehaviour
         get
         {
             if (_instance) return _instance;
-            _container = FindObjectOfType<DataController>() == null ? new GameObject("DataController") : GameObject.Find("DataController");
+            _container = FindObjectOfType<DataController>() is null ? new GameObject("DataController") : GameObject.Find("DataController");
 
             _instance = _container.AddComponent(typeof(DataController)) as DataController;
             DontDestroyOnLoad(_container);
@@ -50,14 +55,7 @@ public class DataController : MonoBehaviour
 
     public PlayerData nowPlayerData
     {
-        get
-        {
-            //if (nowPlayerData == null){
-            //	nowPlayerData = LoadGameData();
-            //	SaveGameData();
-            //}
-            return _nowPlayerData;
-        }
+        get { return _nowPlayerData; }
         set { _nowPlayerData = value; }
     }
 
@@ -74,34 +72,27 @@ public class DataController : MonoBehaviour
 
     public void LoadGameData()
     {
-        //if (File.Exists(filePath))
-        //{
-        //Debug.Log("Load Success");
-        string FromJsonData = File.ReadAllText(filePath + nowSlot.ToString());
+        string fromJsonData = File.ReadAllText(filePath + nowSlot.ToString());
         if (savefile[nowSlot])
         {
-            nowPlayerData = JsonUtility.FromJson<PlayerData>(FromJsonData);
+            nowPlayerData = JsonUtility.FromJson<PlayerData>(fromJsonData);
         }
         else
         {
             nowPlayerData = new PlayerData();
         }
-
-        //}
     }
 
     public void SaveGameData()
     {
-        string ToJsonData = JsonUtility.ToJson(_nowPlayerData);
-        File.WriteAllText(filePath + nowSlot.ToString(), ToJsonData);
-
-        //Debug.Log("Save Succes");
+        string toJsonData = JsonUtility.ToJson(_nowPlayerData);
+        File.WriteAllText(filePath + nowSlot.ToString(), toJsonData);
     }
 
-    private void OnApplicationQuit()
-    {
-        SaveGameData();
-    }
+    // private void OnApplicationQuit()
+    // {
+    //     SaveGameData();
+    // }
 
     public void DataClear()
     {
@@ -126,5 +117,26 @@ public class DataController : MonoBehaviour
         itemBar.GetComponent<ItemManager>().chechItems[num] = 0;
         itemBar.GetComponent<ItemManager>().chechItemState[num] = false;
         itemBar.transform.GetChild(GameManager.GM.itemInt).gameObject.SetActive(false);
+    }
+    
+    public void SaveObjPosition()
+    {
+        setObj = GameObject.Find("CanMoveObj");
+        for (int i = 0; i < 8; i++)
+        {
+            if (setObj.transform.GetChild(i) is null) break;
+            nowPlayerData.setObjPosition[i] = setObj.transform.GetChild(i).gameObject.transform.position;
+        }
+    }
+
+    public void LoadObjPosition()
+    {
+        setObj = GameObject.Find("CanMoveObj");
+        if(nowPlayerData.setObjPosition[0] == new Vector3(0f, 0f, 0f)) return;
+        for (int i = 0; i < 8; i++)
+        {
+            if (setObj.transform.GetChild(i) is null) break;
+            setObj.transform.GetChild(i).gameObject.transform.position = nowPlayerData.setObjPosition[i];
+        }
     }
 }

@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 public class MoveCart : MonoBehaviour
 {
-    public GameObject mainCamera;
+    public CinemachineVirtualCamera mainCamera;
 
     bool isRide;
-    bool isActive;
     Animator anim;
     GameObject player;
 
@@ -18,10 +18,10 @@ public class MoveCart : MonoBehaviour
 
     private void Update()
     {
-        if (isRide && Input.GetKeyDown(KeyCode.F))
-        {            
+        if (isRide && !DataController.Instance.nowPlayerData.activedCart && Input.GetKeyDown(KeyCode.F))
+        {
             player.SetActive(false);
-            mainCamera.GetComponent<MoveCamera>().targetObj = this.gameObject;
+            mainCamera.Follow = gameObject.transform;
             this.transform.GetChild(0).gameObject.SetActive(true);           
             isRide = false;
             
@@ -33,22 +33,22 @@ public class MoveCart : MonoBehaviour
     {
         
         anim.SetBool("isCart", true);
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(14f);
         player.transform.position = transform.position;
         this.transform.GetChild(0).gameObject.SetActive(false);
         yield return null;      //카트에서 내리는 애니메이션 재생 시 시간 대기 추가
         player.gameObject.SetActive(true);
-        mainCamera.GetComponent<MoveCamera>().targetObj = player;
+        mainCamera.Follow = player.transform;
 
-        isActive = false;        
-        anim.SetBool("isCart", false);
+        DataController.Instance.nowPlayerData.activedCart = true;
+        anim.speed = 0;
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D other)
     {
-        if (collision.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            player = collision.gameObject;
+            player = other.gameObject;
             isRide = true;
         }
     }

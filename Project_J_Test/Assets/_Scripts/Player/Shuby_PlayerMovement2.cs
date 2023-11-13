@@ -25,7 +25,6 @@ public class Shuby_PlayerMovement2 : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         transform.position = DataController.Instance.nowPlayerData.playerPositionTutorial;
-        GameManager.GM.hpGauge = DataController.Instance.nowPlayerData.playerHP;
     }
 
     void Update()
@@ -115,7 +114,6 @@ public class Shuby_PlayerMovement2 : MonoBehaviour
         {
             Debug.Log("Damaged!");
             GameManager.GM.hpGauge -= 0.34f;
-            DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
         }
 
         if(!isPush && other.gameObject.CompareTag("MoveObj"))

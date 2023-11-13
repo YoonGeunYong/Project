@@ -22,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     {
         playerRigidbody = GetComponent<Rigidbody2D>();		
 		transform.position = DataController.Instance.nowPlayerData.playerPositionTutorial;
-		GameManager.GM.hpGauge = DataController.Instance.nowPlayerData.playerHP;
 
         defaultLayer = LayerMask.NameToLayer("Player");
         hideLayer = LayerMask.NameToLayer("HidePlayer");
@@ -50,10 +49,8 @@ public class PlayerMovement : MonoBehaviour
 		switch(other.tag)
 		{
 			case "Monster":
-				GameManager.GM.hpGauge -= 0.34f;
-				DataController.Instance.nowPlayerData.playerHP = GameManager.GM.hpGauge;
 				break;
-			case "HelpObject":  //´êÁö ¾Ê°í °¡±îÀÌ ÀÖÀ» ¶§, Æ®¸®°Å ¿ÀºêÁ§Æ®°¡ ¾Æ´Ò ¶§´Â ½ÇÇà ¾ÈµÊ
+			case "HelpObject":  //ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½
                 transform.GetChild(0).gameObject.SetActive(true);	
 				break;
 			//case "Item":
