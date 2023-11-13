@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 [Serializable]
 public class PlayerData
 {
-    // 시간, 위치, 아이템
     public int time = 1;
     public Vector3 playerPositionTutorial = new Vector3(0f, 0f, 0f);
     public bool[] itemState = new bool[4];
@@ -18,6 +17,7 @@ public class PlayerData
     public bool[] doorused = new bool[4];
     public bool activedCart = false;
     public bool isActiveTrap = false;
+    public bool tutorialClear = false;
 }
 
 public class DataController : MonoBehaviour
@@ -89,11 +89,6 @@ public class DataController : MonoBehaviour
         File.WriteAllText(filePath + nowSlot.ToString(), toJsonData);
     }
 
-    // private void OnApplicationQuit()
-    // {
-    //     SaveGameData();
-    // }
-
     public void DataClear()
     {
         nowSlot = -1;
@@ -106,7 +101,11 @@ public class DataController : MonoBehaviour
         {
             SaveGameData();
         }
-        SceneManager.LoadScene(1);
+
+        if (nowPlayerData.tutorialClear)
+            SceneManager.LoadScene(1);
+        else
+            SceneManager.LoadScene(2);
     }
 
     public void UseItem(int num)

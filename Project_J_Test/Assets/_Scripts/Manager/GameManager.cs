@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 	public static GameManager GM;
+	PlayerData playerData;
 
 	[SerializeField] bool _dustInCheck;
 	[SerializeField][Range(0f, 1f)] float _hpGauge = 1f;
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
 	[SerializeField] int _itemInt = 0;
 	[SerializeField] bool _pebbleStone = false;
 	[SerializeField] bool _dieing = false;
+	[SerializeField] bool _isRunning = true;
 
 	public bool dustInCheck
 	{
@@ -55,6 +57,12 @@ public class GameManager : MonoBehaviour
 		set { _dieing = value; }
 	}
 	
+	public bool isRunning
+	{
+		get { return _isRunning; }
+		set { _isRunning = value; }
+	}
+	
 	private void Awake()
 	{
 		if (GM == null) GM = this;
@@ -65,7 +73,7 @@ public class GameManager : MonoBehaviour
 
 	void Start()
     {
-        
+	    playerData = DataController.Instance.nowPlayerData;
     }
 
     

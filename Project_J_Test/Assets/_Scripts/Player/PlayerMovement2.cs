@@ -13,9 +13,9 @@ public class PlayerMovement2 : MonoBehaviour
 
     Rigidbody2D rb;
     FixedJoint2D fixJoint;
-    Animator anim;
     GameObject box;
     GameObject ladder;
+    public Animator anim;
     public GameObject pebbleStone;
     public GameObject dropWheel;
 
@@ -41,9 +41,10 @@ public class PlayerMovement2 : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.GM.dieing)
+        if (GameManager.GM.dieing || !GameManager.GM.isRunning)
         {
             anim.speed = 0f;
+            rb.velocity = Vector2.zero;
             return;
         }
         switch (isLaddering)
@@ -92,20 +93,12 @@ public class PlayerMovement2 : MonoBehaviour
                 {
                     anim.SetBool("Walking", true);
                     anim.SetBool("Running", false);
-                    if (inputH < 0)
-                        transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
-                    else
-                        transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
                     break;
                 }
                 case true when (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)):
                 {
                     anim.SetBool("Running", true);
                     anim.SetBool("Walking", false);
-                    if (!isPush && inputH < 0)
-                        transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
-                    else
-                        transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
                     break;
                 }
                 default:
@@ -113,6 +106,10 @@ public class PlayerMovement2 : MonoBehaviour
                     anim.SetBool("Running", false);
                     break;
             }
+            if (inputH < 0)
+                transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
+            else
+                transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
         }
 
         switch (isLaddering)
@@ -139,8 +136,10 @@ public class PlayerMovement2 : MonoBehaviour
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 break;
         }
-
-        if (isPush && Input.GetKeyDown(KeyCode.F))
+        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector3.down, rayLength,
+            LayerMask.GetMask("Platform"));
+        
+        if (isPush && !rayHit.collider.CompareTag("MoveObj") && Input.GetKeyDown(KeyCode.F))
         {
             box.gameObject.GetComponent<MoveBox>().isMove = true;
             anim.SetBool("Box", true);
@@ -198,8 +197,6 @@ public class PlayerMovement2 : MonoBehaviour
 
         //jump raycast
         Debug.DrawRay(transform.position, Vector3.down * rayLength, new Color(1, 0, 0));
-        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector3.down, rayLength,
-            LayerMask.GetMask("Platform"));
 
         //jump check with eyes
         if (rayHit.collider is not null)
@@ -255,6 +252,12 @@ public class PlayerMovement2 : MonoBehaviour
             fixJoint.connectedBody = rig;
             anim.SetBool("Rope", true);
             isRope = true;
+        }
+
+        if (other.name == "SceneMove")
+        {
+            GameManager.GM.dieing = true;
+            DataController.Instance.nowPlayerData.tutorialClear = true;
         }
     }
 
