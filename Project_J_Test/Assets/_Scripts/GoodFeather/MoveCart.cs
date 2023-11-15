@@ -18,7 +18,7 @@ public class MoveCart : MonoBehaviour
 
     private void Update()
     {
-        if (isRide && !DataController.Instance.nowPlayerData.activedCart && Input.GetKeyDown(KeyCode.F))
+        if (isRide && !DataController.Instance.nowPlayerData.activedCart && Input.GetKeyDown(KeyCode.E))
         {
             player.SetActive(false);
             mainCamera.Follow = gameObject.transform;

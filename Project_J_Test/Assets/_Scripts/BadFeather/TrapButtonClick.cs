@@ -10,11 +10,12 @@ public class TrapButtonClick : MonoBehaviour
 
     private void Start()
     {
-        // if (DataController.Instance.nowPlayerData.isActiveTrap)
-        // {
-        //     gameObject.SetActive(false);
-        //     item.SetActive(false);
-        // }
+        if (DataController.Instance.nowPlayerData.isActiveTrap)
+        {
+            gameObject.SetActive(false);
+            DataController.Instance.UseItem(3);
+            item.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -23,6 +24,5 @@ public class TrapButtonClick : MonoBehaviour
         if(collision.gameObject.CompareTag("Interaction"))
             Destroy(collision.gameObject);
         gameObject.SetActive(false);
-        DataController.Instance.nowPlayerData.isActiveTrap = true;
     }
 }

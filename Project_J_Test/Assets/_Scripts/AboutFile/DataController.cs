@@ -150,7 +150,7 @@ public class DataController : MonoBehaviour
         if(nowPlayerData.setObjPosition[0] == new Vector3(0f, 0f, 0f)) return;
         for (int i = 0; i < 8; i++)
         {
-            if (setObj.transform.GetChild(i) is null) break;
+            if (setObj.transform.childCount == 0) break;
             setObj.transform.GetChild(i).gameObject.transform.position = nowPlayerData.setObjPosition[i];
         }
     }

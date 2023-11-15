@@ -16,6 +16,7 @@ public class PlayerMovement2 : MonoBehaviour
     CircleCollider2D circleCollider;
     GameObject box;
     GameObject ladder;
+    GameObject pebbleStoneClone;
     public Animator anim;
     public GameObject pebbleStone;
     public GameObject dropWheel;
@@ -29,6 +30,7 @@ public class PlayerMovement2 : MonoBehaviour
     public float inputV;
     public bool isPush;
     public bool isPushing;
+    private bool item;
 
     void Start()
     {
@@ -211,33 +213,24 @@ public class PlayerMovement2 : MonoBehaviour
             fixJoint.enabled = false;
             anim.SetBool("Rope", false);
         }
-
+        
         switch (GameManager.GM.itemNum)
         {
-            case 2:
-                if (haveStone && Input.GetKeyDown(KeyCode.E))
-                {
-                    DataController.Instance.UseItem(GameManager.GM.itemInt);
-                    haveStone = false;
-                    pebbleStone = Instantiate(pebbleStone, transform.position + new Vector3(2f, 2f, 0f),
-                        Quaternion.identity);
-                    pebbleStone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);
-                    GameManager.GM.itemInt = -1;
-                }
+                case 2:
+                    if(item) break;
+                    StartCoroutine(Use2());
 
-                break;
-            case 3:
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    DataController.Instance.UseItem(GameManager.GM.itemInt);
-                    dropWheel = Instantiate(dropWheel, transform.position + new Vector3(2f, 0f, 0f),
-                        Quaternion.identity);
-                    dropWheel.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, -0.2f), ForceMode2D.Impulse);
-                    GameManager.GM.itemInt = -1;
-                }
+                    break;
+                case 3:
+                    if (item)
+                    {
+                        Debug.Log("asd");
+                        break;
+                    }
+                    StartCoroutine(Use3());
 
-                break;
-        }
+                    break;
+            }
 
         //jump raycast
         Debug.DrawRay(transform.position, Vector3.down * rayLength, new Color(1, 0, 0));
@@ -261,7 +254,8 @@ public class PlayerMovement2 : MonoBehaviour
         if (other.gameObject.CompareTag("Monster"))
         {
             GameManager.GM.dieing = true;
-            box.gameObject.GetComponent<MoveBox>().isMove = 1;
+            if(other.gameObject.name == "others_3 (1)")
+                box.gameObject.GetComponent<MoveBox>().isMove = 1;
         }
         
         if(!isPush && other.gameObject.CompareTag("MoveObj"))
@@ -309,14 +303,16 @@ public class PlayerMovement2 : MonoBehaviour
 
         if (other.name == "SceneMove")
         {
-            GameManager.GM.dieing = true;
             DataController.Instance.nowPlayerData.tutorialClear = true;
+            DataController.Instance.SaveGameData();
+            GameManager.GM.dieing = true;
         }
     }
 
     void OnTriggerStay2D(Collider2D other)
     {
         if (!other.CompareTag("Interaction") || GameManager.GM.itemNum != 1) return;
+        item = true;
         if (Input.GetKey(KeyCode.E))
         {
             other.GetComponent<DoorControll>().checkItem = true;
@@ -340,6 +336,9 @@ public class PlayerMovement2 : MonoBehaviour
         {
             isRope = false;
         }
+
+        if (other.CompareTag("Interaction"))
+            item = false;
     }
 
     private bool CheckRayer(RaycastHit2D rayHit)
@@ -347,5 +346,36 @@ public class PlayerMovement2 : MonoBehaviour
         if (rayHit.collider is null) return false;
         return !rayHit.collider.CompareTag("MoveObj");
         
+    }
+
+    IEnumerator Use2()
+    {
+        yield return new WaitForSeconds(0.3f);
+        if (haveStone && Input.GetKeyDown(KeyCode.E))
+        {
+            DataController.Instance.UseItem(GameManager.GM.itemInt);
+            haveStone = false;
+            pebbleStoneClone = Instantiate(pebbleStone, transform.position + new Vector3(2f, 2f, 0f),
+                Quaternion.identity);
+            pebbleStoneClone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);
+            GameManager.GM.itemInt = -1;
+        }
+    }
+    
+    IEnumerator Use3()
+    {
+        if (item)
+        {
+            yield return new WaitForSeconds(0.3f);
+            yield break;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            DataController.Instance.UseItem(GameManager.GM.itemInt);
+            dropWheel = Instantiate(dropWheel, transform.position + new Vector3(2f, 0f, 0f),
+                Quaternion.identity);
+            dropWheel.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, -0.2f), ForceMode2D.Impulse);
+            GameManager.GM.itemInt = -1;
+        }
     }
 }

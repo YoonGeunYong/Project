@@ -9,7 +9,7 @@ public class End : MonoBehaviour
 {
     public CinemachineVirtualCamera vcam;
     public GameObject finish;
-    public GameObject image;
+    public GameObject pause;
     
     bool isRide;
 
@@ -19,6 +19,11 @@ public class End : MonoBehaviour
         if (isRide)
         {
             StartCoroutine("EndMove");
+            if (Mathf.Abs(transform.position.x - finish.transform.position.x) < 8f)
+            {
+                pause.SetActive(true);
+                Destroy(this);
+            }
         }
 
     }
@@ -41,11 +46,6 @@ public class End : MonoBehaviour
         if (transform.position != finish.transform.position)
         {
             transform.position = Vector3.Lerp(transform.position, finish.transform.position, 0.01f);
-        }
-        else if (transform.position == finish.transform.position)
-        {
-            image.SetActive(true);
-            Destroy(this);
         }
     }
 }
