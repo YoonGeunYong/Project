@@ -30,7 +30,7 @@ public class ChasePlayer : MonoBehaviour
             if (transform.position.y < -80)
                 transform.position = StartAct2;
 
-            speed = 17f;
+            speed = 19f;
 
             if(transform.position.x < EndAct2X)
                 transform.Translate(Vector2.right * speed * xDir * Time.deltaTime);
