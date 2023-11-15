@@ -21,7 +21,7 @@ public class SelectSlot : MonoBehaviour
                 DataController.Instance.savefile[i] = true;
                 DataController.Instance.nowSlot = i;
                 DataController.Instance.LoadGameData();
-                slotText[i].text = (DataController.Instance.nowPlayerData.time + i).ToString();
+                slotText[i].text = ((int)DataController.Instance.nowPlayerData.time).ToString() + "√ ";
             }
             else
 			{

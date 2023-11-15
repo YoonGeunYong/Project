@@ -27,6 +27,7 @@ public class SavePoint : MonoBehaviour
                     break;
 				}
 			}
+			
 			DataController.Instance.SaveGameData();
 		}
 	}

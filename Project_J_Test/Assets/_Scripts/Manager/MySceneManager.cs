@@ -31,6 +31,8 @@ public class MySceneManager : MonoBehaviour
 
 	public void GoTitleScene()
 	{
+		GameManager.GM.isRunning = true;
+		player.anim.speed = 1f;
 		SceneManager.LoadScene(0);
 	}
 

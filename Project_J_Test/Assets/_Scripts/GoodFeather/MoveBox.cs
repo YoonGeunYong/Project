@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class MoveBox : MonoBehaviour
 {
-    public bool isMove;
+    public int isMove;
     public float speed = 10.0f;
+    private float input;
 
     Rigidbody2D rb;
 
@@ -16,13 +17,32 @@ public class MoveBox : MonoBehaviour
 
     void Update()
     {
-        if (isMove)
+        if (isMove == 2)
         {
-            float input = Input.GetAxis("Horizontal");
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            input = Input.GetAxis("Horizontal");
             //transform.Translate(0, speed * Time.deltaTime * input, 0);
+            if(this.name == "MoveBox (2)")
+                rb.freezeRotation = false;
             rb.velocity = new Vector2(speed * input, rb.velocity.y);
         }
-        else
-            rb.velocity = Vector3.zero;
+        else if(isMove == 1)
+        {
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            if(this.name == "MoveBox (2)")
+                rb.freezeRotation = true;
+            ZeroVelocity();
+        }
+        else if (isMove == 0)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            if(this.name == "MoveBox (2)")
+                rb.freezeRotation = false;
+        }
+    }
+
+    public void ZeroVelocity()
+    { 
+        rb.velocity = Vector2.zero;
     }
 }

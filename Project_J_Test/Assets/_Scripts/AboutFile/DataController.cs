@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 [Serializable]
 public class PlayerData
 {
-    public int time = 1;
+    public float time = 1;
     public Vector3 playerPositionTutorial = new Vector3(0f, 0f, 0f);
     public bool[] itemState = new bool[4];
     public int[] items = new int[4];
@@ -67,7 +67,7 @@ public class DataController : MonoBehaviour
 
     void Start()
     {
-        filePath = Application.dataPath + "/SaveFile/" + fileName;
+        filePath = Application.persistentDataPath + "/SaveFile/" + fileName;
     }
 
     public void LoadGameData()
@@ -85,8 +85,22 @@ public class DataController : MonoBehaviour
 
     public void SaveGameData()
     {
-        string toJsonData = JsonUtility.ToJson(_nowPlayerData);
-        File.WriteAllText(filePath + nowSlot.ToString(), toJsonData);
+        //filepath에 SaveFile이라는 폴더가 없으면 생성
+        if (!Directory.Exists(Application.persistentDataPath + "/SaveFile"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/SaveFile");
+        }
+        
+        try
+        {
+            string toJsonData = JsonUtility.ToJson(_nowPlayerData);
+            File.WriteAllText(filePath + nowSlot.ToString(), toJsonData);
+
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
 
     public void DataClear()

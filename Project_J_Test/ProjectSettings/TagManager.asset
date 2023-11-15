@@ -17,6 +17,7 @@ TagManager:
   - Trap
   - pRope
   - MoveObj
+  - HelpKey
   layers:
   - Default
   - TransparentFX
@@ -31,7 +32,7 @@ TagManager:
   - HidePlayer
   - Monster
   - DeathZone
-  - 
+  - Post Processing
   - 
   - 
   - 

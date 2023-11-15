@@ -9,7 +9,7 @@ public class PlayerMovement2 : MonoBehaviour
 {
     public float speed = 10.0f;      //요괴보다 조금 빠르게 설정함(요괴 speed = 3)
     public float jumpForce = 14.0f;
-    public float rayLength = 3f;
+    public float rayLength = 2f;
 
     Rigidbody2D rb;
     FixedJoint2D fixJoint;
@@ -19,7 +19,7 @@ public class PlayerMovement2 : MonoBehaviour
     public GameObject pebbleStone;
     public GameObject dropWheel;
 
-    private int isLaddering; //타지않음 0, 닿았음 1, 탔음 2
+    public int isLaddering; //타지않음 0, 닿았음 1, 탔음 2
     public bool isRunning;
     public bool isJumping;
     public bool isRope;
@@ -54,7 +54,7 @@ public class PlayerMovement2 : MonoBehaviour
             case < 2:
             {
                 inputH = Input.GetAxis("Horizontal");
-                if (Input.GetKey(KeyCode.LeftShift))
+                if (!isPushing && Input.GetKey(KeyCode.LeftShift))
                 {
                     rb.velocity = new Vector2(speed * inputH * 1.75f, rb.velocity.y);
                     isRunning = true;
@@ -106,10 +106,16 @@ public class PlayerMovement2 : MonoBehaviour
                     anim.SetBool("Running", false);
                     break;
             }
+
             if (inputH < 0)
+            {
                 transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
-            else
+                transform.GetChild(0).transform.localScale = new Vector3( -0.5f, 0.5f, 0);
+            }
+            else if (inputH > 0){
                 transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
+                transform.GetChild(0).transform.localScale = new Vector3( 0.5f, 0.5f, 0);
+            }
         }
 
         switch (isLaddering)
@@ -139,7 +145,7 @@ public class PlayerMovement2 : MonoBehaviour
         RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector3.down, rayLength,
             LayerMask.GetMask("Platform"));
         
-        if (isPush && !rayHit.collider.CompareTag("MoveObj") && Input.GetKeyDown(KeyCode.F))
+        /*if (isPush && !rayHit.collider.CompareTag("MoveObj") && Input.GetKeyDown(KeyCode.F))
         {
             box.gameObject.GetComponent<MoveBox>().isMove = true;
             anim.SetBool("Box", true);
@@ -152,12 +158,47 @@ public class PlayerMovement2 : MonoBehaviour
             anim.SetBool("Box", false);
             isPushing = false;
             isPush = false;
+        }*/
+        
+        if (isPush)
+        {
+            MoveBox moveBox = box.gameObject.GetComponent<MoveBox>();
+            Debug.Log(Vector2.Distance(this.transform.position, box.transform.position) + "");
+            
+            if ( CheckRayer(rayHit) && Input.GetKey(KeyCode.F))
+            {
+                if (box.transform.position.x < transform.position.x)
+                    transform.localScale = new Vector3(-0.75f, transform.localScale.y, 1);
+                else
+                    transform.localScale = new Vector3(0.75f, transform.localScale.y, 1);
+                
+                moveBox.isMove = 2;
+                anim.SetBool("Box", true);
+                isPushing = true;
+            }
+            else if (Input.GetKeyUp(KeyCode.F))
+            {
+                anim.SetBool("Box", false);
+                moveBox.isMove = 0;
+                moveBox.ZeroVelocity();
+                isPushing = false;
+                isPush = false;
+            }
+            else if (Vector2.Distance(this.transform.position, box.transform.position) < 8f || isJumping)
+            {
+                moveBox.isMove = 1;
+            }
+            else 
+            {
+                moveBox.isMove = 0;
+            }
         }
 
 
         //jump
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            isPush = false;
             //merge 11.08
             if (!isJumping || (isRope && fixJoint.connectedBody is not null))
             {
@@ -179,6 +220,7 @@ public class PlayerMovement2 : MonoBehaviour
                     pebbleStone = Instantiate(pebbleStone, transform.position + new Vector3(2f, 2f, 0f),
                         Quaternion.identity);
                     pebbleStone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);
+                    GameManager.GM.itemInt = 0;
                 }
 
                 break;
@@ -189,10 +231,10 @@ public class PlayerMovement2 : MonoBehaviour
                     dropWheel = Instantiate(dropWheel, transform.position + new Vector3(2f, 0f, 0f),
                         Quaternion.identity);
                     dropWheel.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, -0.2f), ForceMode2D.Impulse);
+                    GameManager.GM.itemInt = 0;
                 }
 
                 break;
-
         }
 
         //jump raycast
@@ -217,6 +259,7 @@ public class PlayerMovement2 : MonoBehaviour
         if (other.gameObject.CompareTag("Monster"))
         {
             GameManager.GM.dieing = true;
+            box.gameObject.GetComponent<MoveBox>().isMove = 1;
         }
         
         if(!isPush && other.gameObject.CompareTag("MoveObj"))
@@ -228,9 +271,10 @@ public class PlayerMovement2 : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D other)
     {
-        if(other.gameObject.CompareTag("MoveObj"))
+        if(!isPushing && other.gameObject.CompareTag("MoveObj"))
         {            
             isPush = false;
+            box.gameObject.GetComponent<MoveBox>().isMove = 0;
         }
     }
 
@@ -254,6 +298,12 @@ public class PlayerMovement2 : MonoBehaviour
             isRope = true;
         }
 
+        if (other.CompareTag("HelpKey"))
+        {
+            other.gameObject.SetActive(false);
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
+
         if (other.name == "SceneMove")
         {
             GameManager.GM.dieing = true;
@@ -264,10 +314,11 @@ public class PlayerMovement2 : MonoBehaviour
     void OnTriggerStay2D(Collider2D other)
     {
         if (!other.CompareTag("Interaction") || GameManager.GM.itemNum != 1) return;
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.E))
         {
             other.GetComponent<DoorControll>().checkItem = true;
             DataController.Instance.UseItem(GameManager.GM.itemInt);
+            GameManager.GM.itemInt = 0;
         }
     }
 
@@ -285,5 +336,12 @@ public class PlayerMovement2 : MonoBehaviour
         {
             isRope = false;
         }
+    }
+
+    private bool CheckRayer(RaycastHit2D rayHit)
+    {
+        if (rayHit.collider is null) return false;
+        return !rayHit.collider.CompareTag("MoveObj");
+        
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DoorControll : MonoBehaviour
 {
@@ -35,6 +36,9 @@ public class DoorControll : MonoBehaviour
                 item.transform.position = new Vector3(item.transform.position.x - 10, item.transform.position.y, item.transform.position.z);
                 itemMoved = true;
             }
+
+            if (SceneManager.GetActiveScene().name == "TutorialScene") return;
+            
             DataController.Instance.nowPlayerData.doorused[num] = true;
         }
     }
