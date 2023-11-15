@@ -66,7 +66,7 @@ public class InteractionSystem : MonoBehaviour
             gameObject.SetActive(false);
             interactable[4].SetActive(true);
         }
-        if (interactableNum == 7 && Input.GetKeyDown(KeyCode.Q))
+        if (interactableNum == 7 && Input.GetKeyDown(KeyCode.E))
         {
             spriteRenderer.sprite = sprite[interactableNum];
             gameObject.SetActive(false);

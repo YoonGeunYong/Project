@@ -130,6 +130,8 @@ public class DataController : MonoBehaviour
         itemBar.GetComponent<ItemManager>().chechItems[num] = 0;
         itemBar.GetComponent<ItemManager>().chechItemState[num] = false;
         itemBar.transform.GetChild(GameManager.GM.itemInt).gameObject.SetActive(false);
+        GameManager.GM.itemInt = -1;
+        GameManager.GM.itemNum = -1;
     }
     
     public void SaveObjPosition()

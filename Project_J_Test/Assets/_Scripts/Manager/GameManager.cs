@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-	    if(SceneManager.GetActiveScene().name == "TutorialScene" || SceneManager.GetActiveScene().name == "Creat")
-			DataController.Instance.nowPlayerData.time += Time.deltaTime;
+	    if (SceneManager.GetActiveScene().name == "TitleScene") return;
+	    DataController.Instance.nowPlayerData.time += Time.deltaTime;
     }
 }

@@ -30,6 +30,16 @@ public class ItemManager : MonoBehaviour
 
 	void Update()
     {
+        if (GameManager.GM.itemInt == -1)
+        {
+            items[0].color = new Color(1f, 1f, 1f, 0.5f);
+            items[1].color = new Color(1f, 1f, 1f, 0.5f);
+            items[2].color = new Color(1f, 1f, 1f, 0.5f);
+            items[3].color = new Color(1f, 1f, 1f, 0.5f);
+            GameManager.GM.itemNum = 0;
+            GameManager.GM.itemInt = 0;
+        }
+        
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             GameManager.GM.itemNum = chechItems[0];
@@ -78,10 +88,6 @@ public class ItemManager : MonoBehaviour
                 transform.GetChild(i).GetComponent<Image>().sprite = image;
                 chechItemState[i] = true;
                 chechItems[i] = number;
-                if (GameManager.GM.itemInt == 1)
-                {
-                    GameManager.GM.itemNum = number;
-                }
                 
                 break;
             }

@@ -10,11 +10,11 @@ public class TrapButtonClick : MonoBehaviour
 
     private void Start()
     {
-        if (DataController.Instance.nowPlayerData.isActiveTrap)
-        {
-            gameObject.SetActive(false);
-            item.SetActive(false);
-        }
+        // if (DataController.Instance.nowPlayerData.isActiveTrap)
+        // {
+        //     gameObject.SetActive(false);
+        //     item.SetActive(false);
+        // }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

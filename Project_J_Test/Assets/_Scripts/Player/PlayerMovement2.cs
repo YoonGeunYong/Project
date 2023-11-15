@@ -13,6 +13,7 @@ public class PlayerMovement2 : MonoBehaviour
 
     Rigidbody2D rb;
     FixedJoint2D fixJoint;
+    CircleCollider2D circleCollider;
     GameObject box;
     GameObject ladder;
     public Animator anim;
@@ -35,6 +36,7 @@ public class PlayerMovement2 : MonoBehaviour
         fixJoint.enabled = false;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        circleCollider = GetComponent<CircleCollider2D>();
         DataController.Instance.LoadObjPosition();
         transform.position = DataController.Instance.nowPlayerData.playerPositionTutorial;
     }
@@ -184,7 +186,7 @@ public class PlayerMovement2 : MonoBehaviour
                 isPushing = false;
                 isPush = false;
             }
-            else if (Vector2.Distance(this.transform.position, box.transform.position) < 8f || isJumping)
+            else if (Mathf.Abs(this.transform.position.x - box.transform.position.x) < 8f || isJumping)
             {
                 moveBox.isMove = 1;
             }
@@ -213,25 +215,25 @@ public class PlayerMovement2 : MonoBehaviour
         switch (GameManager.GM.itemNum)
         {
             case 2:
-                if (haveStone && Input.GetKeyDown(KeyCode.Q))
+                if (haveStone && Input.GetKeyDown(KeyCode.E))
                 {
                     DataController.Instance.UseItem(GameManager.GM.itemInt);
                     haveStone = false;
                     pebbleStone = Instantiate(pebbleStone, transform.position + new Vector3(2f, 2f, 0f),
                         Quaternion.identity);
                     pebbleStone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);
-                    GameManager.GM.itemInt = 0;
+                    GameManager.GM.itemInt = -1;
                 }
 
                 break;
             case 3:
-                if (Input.GetKeyDown(KeyCode.Q))
+                if (Input.GetKeyDown(KeyCode.E))
                 {
                     DataController.Instance.UseItem(GameManager.GM.itemInt);
                     dropWheel = Instantiate(dropWheel, transform.position + new Vector3(2f, 0f, 0f),
                         Quaternion.identity);
                     dropWheel.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, -0.2f), ForceMode2D.Impulse);
-                    GameManager.GM.itemInt = 0;
+                    GameManager.GM.itemInt = -1;
                 }
 
                 break;
@@ -287,6 +289,7 @@ public class PlayerMovement2 : MonoBehaviour
             {
                 isLaddering = 1;
             }
+            circleCollider.enabled = false;
         }
 
         if (other.CompareTag("Rope") && !isRope)
@@ -318,7 +321,7 @@ public class PlayerMovement2 : MonoBehaviour
         {
             other.GetComponent<DoorControll>().checkItem = true;
             DataController.Instance.UseItem(GameManager.GM.itemInt);
-            GameManager.GM.itemInt = 0;
+            GameManager.GM.itemInt = -1;
         }
     }
 
@@ -330,6 +333,7 @@ public class PlayerMovement2 : MonoBehaviour
             isLaddering = 0;
             rb.gravityScale = 3;
             anim.SetBool("Laddering", false);
+            circleCollider.enabled = true;
         }
 
         if (other.gameObject.CompareTag("pRope"))
