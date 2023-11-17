@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,12 @@ public class SavePoint : MonoBehaviour
     private void Start()
     {
         itemManager = GameObject.Find("ItemBar").GetComponent<ItemManager>();
+    }
+
+    private void Update()
+    {
+	    if (transform.GetChild(2).transform.localScale.Equals(Vector3.zero))
+		    transform.GetChild(2).gameObject.SetActive(false);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -27,6 +34,9 @@ public class SavePoint : MonoBehaviour
                     break;
 				}
 			}
+			transform.GetChild(1).GetComponent<ParticleSystem>().Stop();
+			transform.GetChild(2).gameObject.SetActive(true);
+			transform.GetChild(2).GetComponent<Animation>().Play();
 			
 			DataController.Instance.SaveGameData();
 		}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,5 +45,13 @@ public class MoveBox : MonoBehaviour
     public void ZeroVelocity()
     { 
         rb.velocity = Vector2.zero;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if(other.gameObject.CompareTag("Platform"))
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
 }
