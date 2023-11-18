@@ -30,6 +30,7 @@ public class PlayerMovement2 : MonoBehaviour
     public float inputV;
     public bool isPush;
     public bool isPushing;
+    public bool pushShift;
     private bool item;
 
     void Start()
@@ -58,15 +59,25 @@ public class PlayerMovement2 : MonoBehaviour
             case < 2:
             {
                 inputH = Input.GetAxis("Horizontal");
-                if (!isPushing && Input.GetKey(KeyCode.LeftShift))
+                if (!isJumping && !isPushing && Input.GetKey(KeyCode.LeftShift))
                 {
                     rb.velocity = new Vector2(speed * inputH * 1.75f, rb.velocity.y);
                     isRunning = true;
+                    pushShift = true;
                 }
-                else
+                else if (!isJumping)
                 {
                     rb.velocity = new Vector2(speed * inputH, rb.velocity.y);
                     isRunning = false;
+                    pushShift = false;
+                }
+                else if (isJumping && !isPushing && pushShift)
+                {
+                    rb.velocity = new Vector2(speed * inputH * 1.75f, rb.velocity.y);
+                }
+                else if (isJumping && !isPushing)
+                {
+                    rb.velocity = new Vector2(speed * inputH, rb.velocity.y);
                 }
 
                 break;
@@ -202,16 +213,7 @@ public class PlayerMovement2 : MonoBehaviour
         //jump
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            isPush = false;
-            //merge 11.08
-            if (!isJumping || (isRope && fixJoint.connectedBody is not null))
-            {
-                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            }
-
-            fixJoint.connectedBody = null;
-            fixJoint.enabled = false;
-            anim.SetBool("Rope", false);
+            Jump();
         }
         
         switch (GameManager.GM.itemNum)
@@ -359,6 +361,7 @@ public class PlayerMovement2 : MonoBehaviour
                 Quaternion.identity);
             pebbleStoneClone.GetComponent<Rigidbody2D>().AddForce(new Vector2(10f, 10f), ForceMode2D.Impulse);
             GameManager.GM.itemInt = -1;
+            GameManager.GM.checkitem2 = false;
         }
     }
     
@@ -377,5 +380,19 @@ public class PlayerMovement2 : MonoBehaviour
             dropWheel.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, -0.2f), ForceMode2D.Impulse);
             GameManager.GM.itemInt = -1;
         }
+    }
+
+    void Jump()
+    {
+        if (isPushing) return;
+        isPush = false;
+        if (!isJumping || (isRope && fixJoint.connectedBody is not null))
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
+
+        fixJoint.connectedBody = null;
+        fixJoint.enabled = false;
+        anim.SetBool("Rope", false);
     }
 }

@@ -14,6 +14,8 @@ public class ItemManager : MonoBehaviour
     {
         for (int i = 0; i < 4; i++)
         {
+            if(GameManager.GM.checkitem2 && DataController.Instance._nowPlayerData.items[i] == 2)
+                continue;
             chechItemState[i] = DataController.Instance._nowPlayerData.itemState[i];
             chechItems[i] = DataController.Instance._nowPlayerData.items[i];
         }
