@@ -1,6 +1,6 @@
 # :pushpin: 귀행록
 >게임 플레이 데모   
->wwww
+>https://drive.google.com/file/d/15a_SWD6fFbhL8xN9SLPNUQ7QEfSvUfnc/view?usp=drive_link
 
 </br>
 
