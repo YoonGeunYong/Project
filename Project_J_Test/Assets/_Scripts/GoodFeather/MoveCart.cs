@@ -7,9 +7,11 @@ public class MoveCart : MonoBehaviour
 {
     public CinemachineVirtualCamera mainCamera;
 
-    bool isRide;
-    Animator anim;
-    GameObject player;
+    private bool isRide;
+    private bool animStart;
+    private Animator anim;
+    private GameObject player;
+    public GameObject keyE;
 
     void Start()
     {
@@ -24,7 +26,9 @@ public class MoveCart : MonoBehaviour
             mainCamera.Follow = gameObject.transform;
             this.transform.GetChild(0).gameObject.SetActive(true);           
             isRide = false;
-            
+            animStart = true;
+            keyE.SetActive(false);
+
             StartCoroutine("CartAnim");
         }
     }
@@ -39,9 +43,18 @@ public class MoveCart : MonoBehaviour
         yield return null;      //카트에서 내리는 애니메이션 재생 시 시간 대기 추가
         player.gameObject.SetActive(true);
         mainCamera.Follow = player.transform;
+        keyE.SetActive(false);
 
         DataController.Instance.nowPlayerData.activedCart = true;
         anim.speed = 0;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && !animStart)
+        {
+            keyE.SetActive(true);
+        }
     }
 
     private void OnTriggerStay2D(Collider2D other)
@@ -50,6 +63,13 @@ public class MoveCart : MonoBehaviour
         {
             player = other.gameObject;
             isRide = true;
+            //keyE.SetActive(true);
         }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+            keyE.SetActive(false);
     }
 }

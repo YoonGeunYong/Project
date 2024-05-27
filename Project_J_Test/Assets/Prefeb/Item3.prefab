@@ -102,6 +102,10 @@ MonoBehaviour:
   item: 3
   removeItem: 1
   itemManager: {fileID: 0}
+  playerChild:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!58 &7255705213029425860
 CircleCollider2D:
   m_ObjectHideFlags: 0

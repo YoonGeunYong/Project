@@ -10,7 +10,8 @@ public class End : MonoBehaviour
     public CinemachineVirtualCamera vcam;
     public GameObject finish;
     public GameObject pause;
-    
+    public GameObject keyE;
+
     bool isRide;
 
     // Update is called once per frame
@@ -28,6 +29,14 @@ public class End : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && !isRide)
+        {
+            keyE.SetActive(false);
+        }
+    }
+
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player") && Input.GetKeyDown(KeyCode.E))
@@ -36,6 +45,7 @@ public class End : MonoBehaviour
             vcam.Follow = null;
             isRide = true;
             other.gameObject.SetActive(false);
+            keyE.SetActive(false);
         }
         
     }

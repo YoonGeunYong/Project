@@ -20,6 +20,10 @@ public class PlayerMovement2 : MonoBehaviour
     public Animator anim;
     public GameObject pebbleStone;
     public GameObject dropWheel;
+    public GameObject keyUpArrow;
+    public GameObject keyF;
+    public GameObject keyE;
+    public GameObject key1;
 
     public int isLaddering; //타지않음 0, 닿았음 1, 탔음 2
     public bool isRunning;
@@ -32,6 +36,7 @@ public class PlayerMovement2 : MonoBehaviour
     public bool isPushing;
     public bool pushShift;
     private bool item;
+    private RaycastHit2D rayHit;
 
     void Start()
     {
@@ -145,6 +150,7 @@ public class PlayerMovement2 : MonoBehaviour
                 anim.SetBool("Laddering", true);
                 anim.speed = 1f;
                 //rb.bodyType = RigidbodyType2D.Kinematic;
+                keyUpArrow.SetActive(false);
                 break;
             //탄 상태에서 점프
             case 2 when Input.GetKeyDown(KeyCode.Space):
@@ -157,7 +163,7 @@ public class PlayerMovement2 : MonoBehaviour
                 rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 break;
         }
-        RaycastHit2D rayHit = Physics2D.Raycast(transform.position, Vector3.down, rayLength,
+        rayHit = Physics2D.Raycast(transform.position, Vector3.down, rayLength,
             LayerMask.GetMask("Platform"));
         
         /*if (isPush && !rayHit.collider.CompareTag("MoveObj") && Input.GetKeyDown(KeyCode.F))
@@ -190,6 +196,7 @@ public class PlayerMovement2 : MonoBehaviour
                 moveBox.isMove = 2;
                 anim.SetBool("Box", true);
                 isPushing = true;
+                keyF.SetActive(false);
             }
             else if (Input.GetKeyUp(KeyCode.F))
             {
@@ -264,6 +271,8 @@ public class PlayerMovement2 : MonoBehaviour
         {            
             isPush = true;
             box = other.gameObject;
+            if (CheckRayer(rayHit))
+                keyF.SetActive(true);
         }
     }
 
@@ -273,6 +282,7 @@ public class PlayerMovement2 : MonoBehaviour
         {            
             isPush = false;
             box.gameObject.GetComponent<MoveBox>().isMove = 0;
+            keyF.SetActive(false);
         }
     }
 
@@ -284,6 +294,7 @@ public class PlayerMovement2 : MonoBehaviour
             if (other.GetComponent<ClimbLadder>().isOpen)
             {
                 isLaddering = 1;
+                keyUpArrow.SetActive(true);
             }
             circleCollider.enabled = false;
         }
@@ -309,6 +320,13 @@ public class PlayerMovement2 : MonoBehaviour
             DataController.Instance.SaveGameData();
             GameManager.GM.dieing = true;
         }
+
+        if (other.CompareTag("Interaction"))
+        {
+            keyE.SetActive(true);
+            if (SceneManager.GetActiveScene().name == "TutorialScene")
+                key1.SetActive(true);
+        }
     }
 
     void OnTriggerStay2D(Collider2D other)
@@ -320,6 +338,9 @@ public class PlayerMovement2 : MonoBehaviour
             other.GetComponent<DoorControll>().checkItem = true;
             DataController.Instance.UseItem(GameManager.GM.itemInt);
             GameManager.GM.itemInt = -1;
+            keyE.SetActive(false);
+            if (SceneManager.GetActiveScene().name == "TutorialScene")
+                key1.SetActive(false);
         }
     }
 
@@ -332,6 +353,7 @@ public class PlayerMovement2 : MonoBehaviour
             rb.gravityScale = 3;
             anim.SetBool("Laddering", false);
             circleCollider.enabled = true;
+            keyUpArrow.SetActive(false);
         }
 
         if (other.gameObject.CompareTag("pRope"))
@@ -340,7 +362,12 @@ public class PlayerMovement2 : MonoBehaviour
         }
 
         if (other.CompareTag("Interaction"))
+        {
             item = false;
+            keyE.SetActive(false);
+            if (SceneManager.GetActiveScene().name == "TutorialScene")
+                key1.SetActive(false);
+        }
     }
 
     private bool CheckRayer(RaycastHit2D rayHit)

@@ -11,7 +11,8 @@ public class DoorControll : MonoBehaviour
     public int num;
     float positionY;
     public GameObject item;
-    
+    public GameObject keyE;
+
     // Start is called before the first frame update
     void Start()
     {
