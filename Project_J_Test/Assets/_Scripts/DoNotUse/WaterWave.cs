@@ -63,7 +63,7 @@ public class WaterWave : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("«≥µ¢~~");
+            Debug.Log("ÌíçÎç©~~");
             int? column = WorldToColumn(new Vector2(collision.transform.position.x - transform.position.x, collision.transform.position.y - transform.position.y));
             if (column.HasValue)
                 columns[column.Value].velocity = power;
